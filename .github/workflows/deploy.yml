@@ -25,12 +25,14 @@ jobs:
       - name: Build de producción
         run: npm run build -- --configuration production
 
-      - name: Deploy via FTP a Hostinger
+      - name: Deploy via FTPS a Hostinger
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
           local-dir: ./dist/diplomas-app/browser/
           server-dir: /public_html/   # Ajusta esta ruta si tu sitio está en una subcarpeta
           exclude: |
