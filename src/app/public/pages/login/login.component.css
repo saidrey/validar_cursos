@@ -1,0 +1,5 @@
+.bg-pattern {
+  background-color: #f6f7f8;
+  background-image: radial-gradient(#137fec15 1px, transparent 1px);
+  background-size: 30px 30px;
+}

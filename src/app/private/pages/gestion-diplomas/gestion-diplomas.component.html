@@ -1,0 +1,43 @@
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="page-title">
+      <span class="material-symbols-outlined title-icon">workspace_premium</span>
+      <div>
+        <h1>Gestión de Diplomas</h1>
+        <p>Administra los diplomas emitidos en la plataforma</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-toggle-inactivos" [class.active]="ocultarInactivos" (click)="toggleOcultarInactivos()">
+        <span class="material-symbols-outlined">{{ ocultarInactivos ? 'visibility_off' : 'visibility' }}</span>
+        {{ ocultarInactivos ? 'Ver todos' : 'Ocultar inactivos' }}
+      </button>
+      <button mat-flat-button color="primary" (click)="abrirDialogoCrear()" class="btn-nuevo">
+        <span class="material-symbols-outlined">add</span>
+        Nuevo Diploma
+      </button>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-card">
+    @if (cargando && diplomas.length === 0) {
+      <div class="loading-state">
+        <mat-spinner diameter="40"></mat-spinner>
+        <span>Cargando diplomas...</span>
+      </div>
+    } @else {
+      <app-data-table
+        [columns]="columnas"
+        [data]="diplomas"
+        [pagination]="paginacion"
+        [hasActions]="true"
+        [rowClass]="rowClass"
+        (paramsChange)="onParamsChange($event)"
+        (editItem)="abrirDialogoEditar($event)"
+        (deleteItem)="confirmarEliminar($event)">
+      </app-data-table>
+    }
+  </div>
+</div>

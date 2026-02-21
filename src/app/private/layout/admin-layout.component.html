@@ -1,0 +1,84 @@
+<div class="admin-shell">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar" [class.collapsed]="!sidebarOpen()">
+    <!-- Logo -->
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <span class="material-symbols-outlined">school</span>
+      </div>
+      @if (sidebarOpen()) {
+        <span class="brand-name">Diplomas App</span>
+      }
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Navegación -->
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.path) {
+        <a [routerLink]="item.path"
+           routerLinkActive="active"
+           [routerLinkActiveOptions]="{ exact: item.path === '/admin' }"
+           class="nav-item"
+           [title]="!sidebarOpen() ? item.label : ''">
+          <span class="material-symbols-outlined nav-icon">{{ item.icon }}</span>
+          @if (sidebarOpen()) {
+            <span class="nav-label">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+
+    <!-- Pie del sidebar -->
+    <div class="sidebar-footer">
+      <mat-divider></mat-divider>
+      <button class="nav-item logout-btn" (click)="cerrarSesion()" [title]="!sidebarOpen() ? 'Cerrar sesión' : ''">
+        <span class="material-symbols-outlined nav-icon">logout</span>
+        @if (sidebarOpen()) {
+          <span class="nav-label">Cerrar sesión</span>
+        }
+      </button>
+    </div>
+  </aside>
+
+  <!-- Área principal -->
+  <div class="admin-main">
+    <!-- Header -->
+    <header class="admin-header">
+      <button class="toggle-btn" (click)="toggleSidebar()" title="Expandir/Colapsar menú">
+        <span class="material-symbols-outlined">{{ sidebarOpen() ? 'menu_open' : 'menu' }}</span>
+      </button>
+
+      <div class="header-spacer"></div>
+
+      <!-- Usuario -->
+      <div class="header-user" [matMenuTriggerFor]="userMenu">
+        <div class="user-avatar">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ usuario?.nombre }}</span>
+          <span class="user-role">Administrador</span>
+        </div>
+        <span class="material-symbols-outlined chevron">expand_more</span>
+      </div>
+
+      <mat-menu #userMenu="matMenu" xPosition="before">
+        <div class="menu-user-header">
+          <p class="menu-user-name">{{ usuario?.nombre }}</p>
+          <p class="menu-user-email">{{ usuario?.email }}</p>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="cerrarSesion()">
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </mat-menu>
+    </header>
+
+    <!-- Contenido -->
+    <main class="admin-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,150 @@
+<app-navbar></app-navbar>
+
+<main>
+  <!-- Hero Section -->
+  <section class="relative w-full h-[600px] overflow-hidden bg-slate-900">
+    <div class="absolute inset-0 opacity-60">
+      <img
+        src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920"
+        alt="Estudiantes colaborando"
+        class="w-full h-full object-cover">
+    </div>
+    <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/40 to-transparent"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+      <div class="max-w-2xl space-y-6">
+        <span class="inline-block py-1 px-3 rounded-full bg-primary/20 border border-primary/30 text-primary text-xs font-bold uppercase tracking-wider">
+          Educación de Élite
+        </span>
+        <h1 class="text-5xl md:text-6xl font-extrabold text-white leading-tight">
+          Impulsa tu carrera con nuestros <span class="text-primary">cursos certificados</span>
+        </h1>
+        <p class="text-lg text-slate-300 font-light leading-relaxed">
+          Programas de desarrollo profesional diseñados por líderes de la industria para garantizar tu éxito en el mercado laboral global.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 pt-4">
+          <a routerLink="/cursos"
+             class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-bold text-base transition-all text-center">
+            Explorar Catálogo
+          </a>
+          <a routerLink="/validar"
+             class="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-base transition-all text-center">
+            Validar Diploma
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What We Do -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="space-y-8">
+          <div>
+            <h2 class="text-primary font-bold text-sm tracking-[0.2em] uppercase mb-3">Lo que hacemos</h2>
+            <h3 class="text-4xl font-extrabold text-slate-900 mb-6">
+              Plataforma educativa integral para el profesional moderno
+            </h3>
+            <p class="text-lg text-slate-600 leading-relaxed">
+              Ofrecemos una plataforma educativa integral diseñada para profesionales que buscan actualizar sus competencias y obtener certificaciones con valor curricular reconocido internacionalmente.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">workspace_premium</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900">Excelencia</h4>
+                <p class="text-sm text-slate-500">Metodologías modernas y actualizadas.</p>
+              </div>
+            </div>
+
+            <div class="flex gap-4">
+              <div class="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">verified_user</span>
+              </div>
+              <div>
+                <h4 class="font-bold text-slate-900">Validación</h4>
+                <p class="text-sm text-slate-500">Certificados verificables al instante.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative">
+          <div class="aspect-video rounded-2xl overflow-hidden shadow-2xl">
+            <img
+              src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800"
+              alt="Enseñanza profesional"
+              class="w-full h-full object-cover">
+          </div>
+          <div class="absolute -bottom-6 -right-6 bg-primary p-8 rounded-2xl shadow-xl hidden md:block">
+            <p class="text-white font-black text-4xl italic">+15k</p>
+            <p class="text-white text-sm font-medium">Estudiantes Graduados</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mission and Vision -->
+  <section class="py-24 bg-background-light">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Mission -->
+        <div class="group bg-white p-10 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300">
+          <div class="w-16 h-16 bg-primary rounded-xl flex items-center justify-center text-white mb-8 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-3xl">track_changes</span>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-900 mb-4">Nuestra Misión</h3>
+          <p class="text-slate-600 leading-relaxed text-lg font-light">
+            Brindar acceso a educación técnica y profesional de primer nivel para empoderar a los líderes del mañana, eliminando las barreras geográficas y económicas.
+          </p>
+        </div>
+
+        <!-- Vision -->
+        <div class="group bg-white p-10 rounded-2xl shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300">
+          <div class="w-16 h-16 bg-primary rounded-xl flex items-center justify-center text-white mb-8 group-hover:scale-110 transition-transform">
+            <span class="material-symbols-outlined text-3xl">visibility</span>
+          </div>
+          <h3 class="text-2xl font-bold text-slate-900 mb-4">Nuestra Visión</h3>
+          <p class="text-slate-600 leading-relaxed text-lg font-light">
+            Ser la institución global líder en certificación profesional, reconocida por la innovación pedagógica y la calidad académica que impulsa economías digitales.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Grid -->
+  <section class="py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 space-y-4">
+        <h2 class="text-primary font-bold text-sm tracking-[0.2em] uppercase">Categorías de Cursos</h2>
+        <h3 class="text-4xl font-extrabold text-slate-900">Especialízate en lo que importa</h3>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (categoria of categorias; track categoria.titulo) {
+          <div class="flex flex-col p-6 bg-slate-50 rounded-xl border border-slate-100 hover:border-primary/50 transition-colors">
+            <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-primary shadow-sm mb-6">
+              <span class="material-symbols-outlined">{{ categoria.icono }}</span>
+            </div>
+            <h4 class="text-xl font-bold text-slate-900 mb-2">{{ categoria.titulo }}</h4>
+            <p class="text-slate-500 text-sm mb-6">{{ categoria.descripcion }}</p>
+            <a routerLink="/cursos"
+               class="mt-auto text-primary font-bold text-sm flex items-center gap-2 group">
+              Ver cursos
+              <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </a>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

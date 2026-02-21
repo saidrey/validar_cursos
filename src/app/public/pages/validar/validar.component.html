@@ -1,0 +1,153 @@
+<app-navbar></app-navbar>
+
+<main class="flex-grow">
+  <!-- Hero Section -->
+  <section class="bg-slate-950 py-16 text-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-white mb-4">
+        Validación de Certificados y Estudiantes
+      </h1>
+      <p class="text-slate-400 max-w-2xl mx-auto font-light">
+        Verifique la autenticidad de las certificaciones emitidas por nuestra institución a través de nuestro sistema de consulta en tiempo real.
+      </p>
+    </div>
+  </section>
+
+  <!-- Validation Form Section -->
+  <section class="relative -mt-10 pb-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 border border-slate-100">
+        <div class="flex items-center gap-3 mb-8">
+          <span class="material-symbols-outlined text-primary text-3xl">verified_user</span>
+          <h2 class="text-xl font-bold text-slate-900">Consulta de Estatus</h2>
+        </div>
+
+        <p class="text-slate-600 mb-8 leading-relaxed">
+          Ingrese los datos del estudiante para verificar su estatus en nuestra plataforma y acceder a su historial de certificaciones.
+        </p>
+
+        <form [formGroup]="validacionForm" (ngSubmit)="onValidar()" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Tipo de Documento -->
+            <div class="space-y-2">
+              <label for="tipoDocumento" class="block text-sm font-semibold text-slate-700">
+                Tipo de Documento
+              </label>
+              <select
+                id="tipoDocumento"
+                formControlName="tipoDocumento"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-slate-900">
+                <option value="CC">Cédula de Ciudadanía</option>
+                <option value="TI">Tarjeta de Identidad</option>
+                <option value="CE">Cédula de Extranjería</option>
+                <option value="PA">Pasaporte</option>
+                <option value="NIT">NIT</option>
+              </select>
+            </div>
+
+            <!-- Número de Documento -->
+            <div class="space-y-2">
+              <label for="documento" class="block text-sm font-semibold text-slate-700">
+                Número de Documento
+              </label>
+              <input
+                type="text"
+                id="documento"
+                formControlName="documento"
+                placeholder="Ej: 1012345678"
+                class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-slate-900 placeholder-slate-400">
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            [disabled]="validacionForm.invalid || isLoading"
+            class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (isLoading) {
+              <span class="material-symbols-outlined animate-spin">progress_activity</span>
+              <span>Validando...</span>
+            } @else {
+              <span class="material-symbols-outlined">search</span>
+              <span>Validar Información</span>
+            }
+          </button>
+
+          <!-- Resultado de Validación -->
+          @if (resultado) {
+            <div class="mt-8">
+              @if (resultado.valido) {
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 flex items-start gap-4">
+                  <div class="bg-emerald-500 text-white rounded-full p-1 flex-shrink-0">
+                    <span class="material-symbols-outlined text-xl">check</span>
+                  </div>
+                  <div class="space-y-3 flex-grow">
+                    <p class="text-emerald-800 font-bold text-sm">Usuario Registrado</p>
+                    <p class="text-emerald-700 text-sm leading-relaxed">
+                      El estudiante cuenta con certificaciones vigentes en nuestro sistema. Los datos coinciden con nuestra base de datos oficial.
+                    </p>
+                    
+                    <!-- Lista de Diplomas -->
+                    @if (resultado.diplomas && resultado.diplomas.length > 0) {
+                      <div class="mt-4 space-y-3">
+                        <p class="text-emerald-800 font-semibold text-sm">Certificaciones encontradas:</p>
+                        @for (diploma of resultado.diplomas; track diploma.id) {
+                          <div class="bg-white border border-emerald-200 rounded-lg p-4">
+                            <div class="flex justify-between items-start mb-2">
+                              <h4 class="font-bold text-slate-900">{{ diploma.curso_nombre }}</h4>
+                              <span class="text-xs bg-emerald-100 text-emerald-700 px-2 py-1 rounded-full">Válido</span>
+                            </div>
+                            <div class="space-y-1 text-sm text-slate-600">
+                              <p><strong>Estudiante:</strong> {{ diploma.nombre_estudiante }}</p>
+                              <p><strong>Documento:</strong> {{ diploma.tipo_documento }} {{ diploma.documento }}</p>
+                              <p><strong>Fecha de emisión:</strong> {{ diploma.fecha_emision | date:'dd/MM/yyyy' }}</p>
+                              <p><strong>Código de verificación:</strong> 
+                                <span class="font-mono text-primary">{{ diploma.codigo_verificacion }}</span>
+                              </p>
+                              @if (diploma.instructor) {
+                                <p><strong>Instructor:</strong> {{ diploma.instructor }}</p>
+                              }
+                            </div>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+              } @else {
+                <div class="bg-red-50 border border-red-200 rounded-xl p-6 flex items-start gap-4">
+                  <div class="bg-red-500 text-white rounded-full p-1 flex-shrink-0">
+                    <span class="material-symbols-outlined text-xl">close</span>
+                  </div>
+                  <div class="space-y-1">
+                    <p class="text-red-800 font-bold text-sm">No se encontraron registros</p>
+                    <p class="text-red-700 text-sm leading-relaxed">
+                      No se encontraron certificaciones para el documento proporcionado. Verifique los datos e intente nuevamente.
+                    </p>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </form>
+
+        <!-- Trust Badges -->
+        <div class="mt-12 pt-8 border-t border-slate-100 flex flex-wrap justify-center gap-8 md:gap-12 opacity-50 grayscale hover:grayscale-0 transition-all">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">gpp_good</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Sistema Seguro</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">shield_with_heart</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Privacidad Protegida</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">verified</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Oficial Diplomas App</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

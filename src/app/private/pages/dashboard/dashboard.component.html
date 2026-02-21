@@ -1,0 +1,30 @@
+<div class="page-container">
+  <!-- Bienvenida -->
+  <div class="welcome-banner">
+    <div class="welcome-icon">
+      <span class="material-symbols-outlined">waving_hand</span>
+    </div>
+    <div>
+      <h1>Bienvenido, {{ usuario?.nombre }}</h1>
+      <p>Panel de administración · Diplomas App</p>
+    </div>
+  </div>
+
+  <!-- Accesos rápidos -->
+  <div class="section-title">Gestión del sistema</div>
+
+  <div class="access-grid">
+    @for (item of accesos; track item.ruta) {
+      <a [routerLink]="item.ruta" class="access-card">
+        <div class="access-icon" [style.background]="item.bg" [style.color]="item.color">
+          <span class="material-symbols-outlined">{{ item.icon }}</span>
+        </div>
+        <div class="access-info">
+          <h3>{{ item.titulo }}</h3>
+          <p>{{ item.descripcion }}</p>
+        </div>
+        <span class="material-symbols-outlined access-arrow">arrow_forward</span>
+      </a>
+    }
+  </div>
+</div>

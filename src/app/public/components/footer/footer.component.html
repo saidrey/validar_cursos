@@ -1,0 +1,78 @@
+<footer class="bg-slate-950 text-slate-400 py-20 border-t border-slate-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <!-- Brand Info -->
+      <div class="lg:col-span-4 space-y-6">
+        <div class="flex items-center gap-2 text-white">
+          <span class="material-symbols-outlined text-primary">school</span>
+          <span class="text-2xl font-extrabold"></span>
+        </div>
+        <p class="text-sm leading-relaxed max-w-xs">
+          Elevando el estándar de la educación técnica. Formamos a los profesionales que construyen el futuro.
+        </p>
+        <div class="flex gap-4">
+          <a href="#" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-primary hover:text-white transition-all">
+            <span class="material-symbols-outlined text-xl font-normal">public</span>
+          </a>
+          <a href="#" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-primary hover:text-white transition-all">
+            <span class="material-symbols-outlined text-xl font-normal">hub</span>
+          </a>
+          <a href="#" class="w-10 h-10 rounded-full bg-slate-900 flex items-center justify-center hover:bg-primary hover:text-white transition-all">
+            <span class="material-symbols-outlined text-xl font-normal">alternate_email</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="lg:col-span-2 space-y-6">
+        <h5 class="text-white font-bold text-base">Enlaces Rápidos</h5>
+        <ul class="space-y-4 text-sm">
+          <li><a routerLink="/" class="hover:text-primary transition-colors">Inicio</a></li>
+          <li><a routerLink="/cursos" class="hover:text-primary transition-colors">Cursos</a></li>
+          <li><a routerLink="/validar" class="hover:text-primary transition-colors">Validar Diploma</a></li>
+          <li><a routerLink="/contacto" class="hover:text-primary transition-colors">Contacto</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="lg:col-span-6 space-y-6">
+        <h5 class="text-white font-bold text-base">Contáctanos</h5>
+        <form class="space-y-4" (ngSubmit)="onSubmit()" #contactForm="ngForm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="nombre"
+              [(ngModel)]="formData.nombre"
+              placeholder="Tu Nombre"
+              required
+              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="formData.email"
+              placeholder="Tu Email"
+              required
+              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
+          </div>
+          <textarea
+            name="mensaje"
+            [(ngModel)]="formData.mensaje"
+            placeholder="Tu Mensaje"
+            rows="4"
+            required
+            class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500"></textarea>
+          <button
+            type="submit"
+            [disabled]="!contactForm.valid"
+            class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-3 rounded-lg transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed">
+            Enviar Mensaje
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="mt-20 pt-8 border-t border-slate-900 text-center text-xs">
+      <p>© 2024. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>

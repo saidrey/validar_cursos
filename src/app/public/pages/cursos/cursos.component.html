@@ -1,0 +1,64 @@
+<app-navbar></app-navbar>
+
+<main>
+  <!-- Hero Section -->
+  <section class="py-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">Catálogo de Cursos</h1>
+      <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+        Explora nuestra selección de programas certificados diseñados para acelerar tu crecimiento profesional.
+      </p>
+    </div>
+  </section>
+
+  <!-- Cursos Grid -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Loading State -->
+      <div *ngIf="cargando" class="text-center py-20">
+        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <p class="mt-4 text-slate-500">Cargando cursos...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!cargando && cursos.length === 0" class="text-center py-20">
+        <span class="material-symbols-outlined text-6xl text-slate-300 mb-4">school</span>
+        <p class="text-slate-500">No hay cursos disponibles en este momento.</p>
+      </div>
+
+      <!-- Cursos Grid -->
+      <div *ngIf="!cargando && cursos.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <article *ngFor="let curso of cursos" 
+                 class="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 flex flex-col h-full border border-slate-100 dark:border-slate-800">
+          
+          <!-- Imagen -->
+          <div class="p-4">
+            <img [src]="curso.imagen || 'https://via.placeholder.com/400x300?text=Curso'" 
+                 [alt]="curso.nombre"
+                 class="w-full h-56 object-cover rounded-xl">
+          </div>
+
+          <!-- Contenido -->
+          <div class="px-6 py-6 flex flex-col flex-grow">
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ curso.nombre }}</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed line-clamp-2 mb-8">
+              {{ curso.resumen || curso.descripcion }}
+            </p>
+
+            <!-- Botón -->
+            <div class="mt-auto">
+              <a [routerLink]="['/cursos', curso.id]" 
+                 class="block w-full py-3 px-6 rounded-xl border-2 border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all duration-300 text-center">
+                Ver más
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

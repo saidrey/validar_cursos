@@ -1,0 +1,114 @@
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.welcome-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #137fec 0%, #1d4ed8 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(19,127,236,0.3);
+}
+
+.welcome-icon {
+  width: 52px;
+  height: 52px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.welcome-icon .material-symbols-outlined { font-size: 28px; }
+
+.welcome-banner h1 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.welcome-banner p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+}
+
+.access-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.access-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.access-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  border-color: #cbd5e1;
+}
+
+.access-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.access-icon .material-symbols-outlined { font-size: 24px; }
+
+.access-info { flex: 1; }
+
+.access-info h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.access-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.access-arrow {
+  color: #94a3b8;
+  font-size: 20px;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.access-card:hover .access-arrow {
+  transform: translateX(4px);
+  color: #137fec;
+}
