@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ContactoService } from '../../../core/services/contacto.service';
 
 @Component({
   selector: 'app-footer',
@@ -10,16 +11,35 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './footer.component.css'
 })
 export class FooterComponent {
+  private contactoService = inject(ContactoService);
+
   formData = {
     nombre: '',
+    telefono: '',
     email: '',
     mensaje: ''
   };
 
+  isLoading = false;
+  enviado = false;
+  error = false;
+
   onSubmit() {
-    console.log('Formulario enviado:', this.formData);
-    // TODO: Implementar envío al backend
-    alert('Mensaje enviado correctamente');
-    this.formData = { nombre: '', email: '', mensaje: '' };
+    if (this.isLoading) return;
+    this.isLoading = true;
+    this.enviado = false;
+    this.error = false;
+
+    this.contactoService.enviarMensajeGeneral(this.formData).subscribe({
+      next: () => {
+        this.enviado = true;
+        this.formData = { nombre: '', telefono: '', email: '', mensaje: '' };
+        this.isLoading = false;
+      },
+      error: () => {
+        this.error = true;
+        this.isLoading = false;
+      }
+    });
   }
 }
