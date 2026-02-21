@@ -34,7 +34,7 @@ jobs:
           protocol: ftps
           port: 21
           local-dir: ./dist/diplomas-app/browser/
-          server-dir: /public_html/   # Ajusta esta ruta si tu sitio está en una subcarpeta
+          server-dir: public_html/
           exclude: |
             **/.git*
             **/.git*/**
