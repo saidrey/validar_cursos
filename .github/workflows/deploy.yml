@@ -37,7 +37,7 @@ jobs:
           protocol: ftps
           port: 21
           local-dir: ./dist/diplomas-app/browser/
-          server-dir: domains/aulavirtualcentrodecompetencia.com/public_html/
+          server-dir: /domains/aulavirtualcentrodecompetencia.com/public_html/
           log-level: verbose
           exclude: |
             **/.git*
