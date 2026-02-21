@@ -46,7 +46,7 @@ export interface TableColumn {
       </div>
 
       <!-- Tabla -->
-      <div class="mat-elevation-z2 rounded-lg overflow-hidden">
+      <div class="mat-elevation-z2 rounded-lg overflow-x-auto">
         <table mat-table [dataSource]="data" matSort (matSortChange)="onSort($event)" class="w-full">
 
           <!-- Columnas dinámicas -->

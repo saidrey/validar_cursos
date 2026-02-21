@@ -31,7 +31,8 @@ export class AdminLayoutComponent {
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  sidebarOpen = signal(true);
+  sidebarOpen = signal(window.innerWidth >= 768);
+  isMobile = signal(window.innerWidth < 768);
   usuario = this.authService.obtenerUsuario();
 
   navItems: NavItem[] = [
@@ -43,6 +44,12 @@ export class AdminLayoutComponent {
 
   toggleSidebar() {
     this.sidebarOpen.update(v => !v);
+  }
+
+  closeSidebarOnMobile() {
+    if (this.isMobile()) {
+      this.sidebarOpen.set(false);
+    }
   }
 
   cerrarSesion() {

@@ -1,4 +1,10 @@
 <div class="admin-shell">
+
+  <!-- Overlay para mobile -->
+  @if (sidebarOpen() && isMobile()) {
+    <div class="sidebar-overlay" (click)="toggleSidebar()"></div>
+  }
+
   <!-- Sidebar -->
   <aside class="admin-sidebar" [class.collapsed]="!sidebarOpen()">
     <!-- Logo -->
@@ -20,7 +26,8 @@
            routerLinkActive="active"
            [routerLinkActiveOptions]="{ exact: item.path === '/admin' }"
            class="nav-item"
-           [title]="!sidebarOpen() ? item.label : ''">
+           [title]="!sidebarOpen() ? item.label : ''"
+           (click)="closeSidebarOnMobile()">
           <span class="material-symbols-outlined nav-icon">{{ item.icon }}</span>
           @if (sidebarOpen()) {
             <span class="nav-label">{{ item.label }}</span>

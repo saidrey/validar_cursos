@@ -29,13 +29,55 @@
         </a>
       </nav>
 
-      <!-- CTA Button -->
-      <div class="flex items-center gap-4">
+      <!-- CTA + Hamburguesa -->
+      <div class="flex items-center gap-3">
         <a routerLink="/login"
            class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-md shadow-primary/20">
           Login
         </a>
+        <!-- Botón hamburguesa (solo mobile) -->
+        <button class="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
+                (click)="toggleMenu()"
+                [attr.aria-label]="menuOpen() ? 'Cerrar menú' : 'Abrir menú'">
+          @if (menuOpen()) {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          }
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Menú mobile desplegable -->
+  @if (menuOpen()) {
+    <div class="md:hidden border-t border-slate-200 bg-white/95 backdrop-blur-md">
+      <nav class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
+        <a routerLink="/" routerLinkActive="text-primary bg-blue-50" [routerLinkActiveOptions]="{exact: true}"
+           (click)="closeMenu()"
+           class="px-4 py-3 rounded-lg text-sm font-semibold text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors">
+          Inicio
+        </a>
+        <a routerLink="/cursos" routerLinkActive="text-primary bg-blue-50"
+           (click)="closeMenu()"
+           class="px-4 py-3 rounded-lg text-sm font-semibold text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors">
+          Cursos
+        </a>
+        <a routerLink="/validar" routerLinkActive="text-primary bg-blue-50"
+           (click)="closeMenu()"
+           class="px-4 py-3 rounded-lg text-sm font-semibold text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors">
+          Validar
+        </a>
+        <a routerLink="/contacto" routerLinkActive="text-primary bg-blue-50"
+           (click)="closeMenu()"
+           class="px-4 py-3 rounded-lg text-sm font-semibold text-slate-700 hover:text-primary hover:bg-slate-50 transition-colors">
+          Contacto
+        </a>
+      </nav>
+    </div>
+  }
 </header>
