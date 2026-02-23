@@ -40,6 +40,7 @@ export class AdminLayoutComponent {
     { path: '/admin/cursos', label: 'Cursos', icon: 'school' },
     { path: '/admin/diplomas', label: 'Diplomas', icon: 'card_membership' },
     { path: '/admin/usuarios', label: 'Personas', icon: 'people' },
+    { path: '/admin/correos', label: 'Mensajes', icon: 'mail' },
   ];
 
   toggleSidebar() {

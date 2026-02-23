@@ -20,6 +20,10 @@ export const PRIVATE_ROUTES: Routes = [
       {
         path: 'usuarios',
         loadComponent: () => import('./pages/gestion-usuarios/gestion-usuarios.component').then(m => m.GestionUsuariosComponent)
+      },
+      {
+        path: 'correos',
+        loadComponent: () => import('./pages/gestion-correos/gestion-correos.component').then(m => m.GestionCorreosComponent)
       }
     ]
   }
