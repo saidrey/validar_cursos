@@ -103,17 +103,6 @@ export class ConfirmDialogComponent {
           }
         </div>
 
-        <!-- Instructor -->
-        <div class="field-group">
-          <label class="field-label">Instructor <span class="req">*</span></label>
-          <input type="text" formControlName="instructor"
-                 placeholder="Nombre del instructor"
-                 class="field-input" [class.field-error]="form.get('instructor')?.invalid && form.get('instructor')?.touched">
-          @if (form.get('instructor')?.invalid && form.get('instructor')?.touched) {
-            <span class="error-msg">El instructor es requerido</span>
-          }
-        </div>
-
         <!-- Resumen -->
         <div class="field-group">
           <label class="field-label">Resumen</label>
@@ -130,25 +119,14 @@ export class ConfirmDialogComponent {
                     class="field-input field-textarea"></textarea>
         </div>
 
-        <!-- Duración y Precio -->
-        <div class="field-row">
-          <div class="field-group">
-            <label class="field-label">Duración</label>
-            <div class="input-with-icon">
-              <span class="material-symbols-outlined input-icon">schedule</span>
-              <input type="text" formControlName="duracion"
-                     placeholder="Ej: 40 horas"
-                     class="field-input has-icon">
-            </div>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Precio</label>
-            <div class="input-with-icon">
-              <span class="input-prefix">$</span>
-              <input type="number" formControlName="precio" min="0"
-                     placeholder="0"
-                     class="field-input has-prefix">
-            </div>
+        <!-- Duración -->
+        <div class="field-group">
+          <label class="field-label">Duración</label>
+          <div class="input-with-icon">
+            <span class="material-symbols-outlined input-icon">schedule</span>
+            <input type="text" formControlName="duracion"
+                   placeholder="Ej: 40 horas"
+                   class="field-input has-icon">
           </div>
         </div>
 
@@ -392,11 +370,11 @@ export class CursoFormDialogComponent {
 
   form: FormGroup = this.fb.group({
     nombre:      [this.data.curso?.nombre      ?? '', Validators.required],
-    instructor:  [this.data.curso?.instructor  ?? '', Validators.required],
+    instructor:  ['N/A'],
     resumen:     [this.data.curso?.resumen     ?? ''],
     descripcion: [this.data.curso?.descripcion ?? ''],
     duracion:    [this.data.curso?.duracion    ?? ''],
-    precio:      [this.data.curso?.precio      ?? 0],
+    precio:      [0],
     imagen:      [this.data.curso?.imagen      ?? ''],
     activo:      [this.data.curso ? this.data.curso.activo === 1 : true]
   });
@@ -451,7 +429,8 @@ export class CursoFormDialogComponent {
     const values  = this.form.value;
     const payload = {
       ...values,
-      precio: parseFloat(values.precio) || 0,
+      instructor: 'N/A',
+      precio: 0,
       activo: values.activo ? 1 : 0
     };
     try {
