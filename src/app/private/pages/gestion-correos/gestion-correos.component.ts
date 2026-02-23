@@ -84,10 +84,10 @@ export class ConfirmCorreoDialogComponent {
         <span class="info-value">{{ data.asunto }}</span>
       </div>
 
-      <div class="info-item">
+      <!-- <div class="info-item">
         <span class="info-label">Mensaje</span>
         <div class="msg-body">{{ data.cuerpo }}</div>
-      </div>
+      </div> -->
 
       @if (data.error_mensaje) {
         <div class="info-item">
