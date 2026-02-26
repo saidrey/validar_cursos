@@ -9,6 +9,7 @@ import { Usuario, LoginResponse } from '../models/usuario.model';
 })
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/login.php`;
+  private registroUrl = `${environment.apiUrl}/registro.php`;
   private usuarioActual = signal<Usuario | null>(null);
 
   constructor(private http: HttpClient) {
@@ -27,6 +28,10 @@ export class AuthService {
           }
         })
       );
+  }
+
+  registro(nombre: string, email: string, password: string): Observable<any> {
+    return this.http.post(this.registroUrl, { nombre, email, password });
   }
 
   logout(): void {
