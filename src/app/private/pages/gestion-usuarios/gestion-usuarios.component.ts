@@ -113,6 +113,48 @@ export class ConfirmUsuarioDialogComponent {
               Usuario activo (puede iniciar sesión)
             </mat-slide-toggle>
           </div>
+
+          <!-- Cambiar contraseña -->
+          <div class="pass-separator"></div>
+          <div class="toggle-field">
+            <mat-slide-toggle formControlName="cambiarPassword" color="warn">
+              Cambiar contraseña
+            </mat-slide-toggle>
+          </div>
+
+          @if (form.get('cambiarPassword')?.value) {
+            <div class="field-group" style="margin-top:12px">
+              <label class="field-label">Nueva contraseña <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <span class="material-symbols-outlined input-icon">lock_reset</span>
+                <input [type]="mostrarNuevaPassword ? 'text' : 'password'"
+                       formControlName="nueva_password"
+                       placeholder="Mínimo 6 caracteres"
+                       class="field-input has-icon has-suffix">
+                <button type="button" class="toggle-password" (click)="mostrarNuevaPassword = !mostrarNuevaPassword">
+                  <span class="material-symbols-outlined">{{ mostrarNuevaPassword ? 'visibility_off' : 'visibility' }}</span>
+                </button>
+              </div>
+              @if (form.get('nueva_password')?.value?.length > 0 && form.get('nueva_password')?.value?.length < 6) {
+                <span class="error-msg">Mínimo 6 caracteres</span>
+              }
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Confirmar contraseña <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <span class="material-symbols-outlined input-icon">lock</span>
+                <input [type]="mostrarNuevaPassword ? 'text' : 'password'"
+                       formControlName="confirmar_password"
+                       placeholder="Repite la nueva contraseña"
+                       class="field-input has-icon"
+                       [class.field-error]="passwordMismatch">
+              </div>
+              @if (passwordMismatch) {
+                <span class="error-msg">Las contraseñas no coinciden</span>
+              }
+            </div>
+          }
         }
 
       </form>
@@ -148,6 +190,7 @@ export class ConfirmUsuarioDialogComponent {
     .toggle-password .material-symbols-outlined { font-size: 18px; }
     .error-msg { font-size: 0.75rem; color: #ef4444; }
     .toggle-field { margin-top: 4px; margin-bottom: 4px; }
+    .pass-separator { border-top: 1px dashed #e2e8f0; margin: 14px 0 10px; }
     .dialog-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 0.875rem 1.5rem; border-top: 1px solid #e2e8f0; }
     .btn-cancel { color: #64748b; }
     .btn-save { font-weight: 600; }
@@ -160,20 +203,43 @@ export class UsuarioFormDialogComponent {
 
   guardando = false;
   mostrarPassword = false;
+  mostrarNuevaPassword = false;
+  passwordMismatch = false;
 
   form: FormGroup = this.fb.group({
     nombre: [this.data.usuario?.nombre ?? '', Validators.required],
     email: [this.data.usuario?.email ?? '', [Validators.required, Validators.email]],
-    ...(this.data.usuario ? {} : { password: ['', [Validators.required, Validators.minLength(6)]] }),
+    ...(this.data.usuario
+      ? { cambiarPassword: [false], nueva_password: [''], confirmar_password: [''] }
+      : { password: ['', [Validators.required, Validators.minLength(6)]] }),
     rol: [this.data.usuario?.rol ?? 'usuario', Validators.required],
     activo: [this.data.usuario ? this.data.usuario.activo === 1 : true]
   });
 
   async guardar() {
     if (this.form.invalid) return;
-    this.guardando = true;
     const values = this.form.value;
-    const payload = { ...values, activo: values.activo ? 1 : 0 };
+
+    // Validar contraseña si el toggle está activo
+    if (values.cambiarPassword) {
+      if (!values.nueva_password || values.nueva_password.length < 6) return;
+      if (values.nueva_password !== values.confirmar_password) {
+        this.passwordMismatch = true;
+        return;
+      }
+    }
+    this.passwordMismatch = false;
+
+    this.guardando = true;
+    const payload: any = { ...values, activo: values.activo ? 1 : 0 };
+    if (values.cambiarPassword && values.nueva_password) {
+      payload.nueva_password = values.nueva_password;
+    } else {
+      delete payload.nueva_password;
+    }
+    delete payload.cambiarPassword;
+    delete payload.confirmar_password;
+
     try {
       await this.data.onSave(payload);
       this.dialogRef.close(true);
