@@ -12,7 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { DataTableComponent, TableColumn } from '../../../shared/data-table.component';
 import { CursosService } from '../../../core/services/cursos.service';
-import { Curso } from '../../../core/models/curso.model';
+import { Curso, Pregunta } from '../../../core/models/curso.model';
 import { TableParams } from '../../../core/models/pagination.model';
 
 // ─── Diálogo de confirmación ─────────────────────────────────
@@ -183,6 +183,71 @@ export class ConfirmDialogComponent {
                     placeholder="# Título&#10;## Sección&#10;Escribe aquí el contenido en formato Markdown..."
                     class="field-input field-textarea" style="font-family: monospace; font-size: 0.8125rem;"></textarea>
           <span class="field-hint">Soporta: # Títulos, **negrita**, *cursiva*, - listas</span>
+        </div>
+
+        <!-- Examen / Preguntas -->
+        <div class="field-group">
+          <div class="exam-header">
+            <label class="field-label">Examen del curso</label>
+            <button type="button" class="btn-agregar-pregunta" (click)="agregarPregunta()">
+              <span class="material-symbols-outlined">add_circle</span>
+              Agregar pregunta
+            </button>
+          </div>
+
+          @if (preguntas().length === 0) {
+            <div class="sin-preguntas">
+              <span class="material-symbols-outlined">quiz</span>
+              <span>Sin preguntas. El curso no tendrá examen.</span>
+            </div>
+          }
+
+          @for (p of preguntas(); track $index; let pi = $index) {
+            <div class="pregunta-card">
+              <div class="pregunta-encabezado">
+                <span class="pregunta-num">{{ pi + 1 }}</span>
+                <input type="text"
+                       class="field-input pregunta-texto"
+                       [value]="p.pregunta"
+                       placeholder="Escribe la pregunta aquí..."
+                       (input)="actualizarTexto(pi, $any($event.target).value)">
+                <button type="button" class="btn-eliminar-pregunta" (click)="eliminarPregunta(pi)" title="Eliminar pregunta">
+                  <span class="material-symbols-outlined">delete</span>
+                </button>
+              </div>
+              <div class="opciones-wrap">
+                @for (op of p.opciones; track $index; let oi = $index) {
+                  <div class="opcion-fila">
+                    <input type="radio"
+                           [name]="'respuesta_' + pi"
+                           [checked]="p.respuesta_correcta === oi"
+                           (change)="setRespuesta(pi, oi)"
+                           class="opcion-radio"
+                           title="Marcar como respuesta correcta">
+                    <input type="text"
+                           class="field-input opcion-input"
+                           [value]="op"
+                           [placeholder]="'Opción ' + (oi + 1)"
+                           (input)="actualizarOpcion(pi, oi, $any($event.target).value)">
+                    @if (p.opciones.length > 2) {
+                      <button type="button" class="btn-quitar-opcion" (click)="eliminarOpcion(pi, oi)" title="Quitar opción">
+                        <span class="material-symbols-outlined">remove</span>
+                      </button>
+                    }
+                  </div>
+                }
+              </div>
+              @if (p.opciones.length < 6) {
+                <button type="button" class="btn-add-opcion" (click)="agregarOpcion(pi)">
+                  + Añadir opción
+                </button>
+              }
+              @if (p.respuesta_correcta === -1) {
+                <span class="error-msg">Selecciona la respuesta correcta con el radio button</span>
+              }
+            </div>
+          }
+          <span class="field-hint">Define las preguntas del examen y marca con el círculo la opción correcta.</span>
         </div>
 
         <!-- Estado (solo en edición) -->
@@ -373,6 +438,112 @@ export class ConfirmDialogComponent {
       margin-top: 4px;
     }
 
+    /* Exam questions */
+    .exam-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .btn-agregar-pregunta {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #eff6ff;
+      color: #137fec;
+      border: 1.5px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .btn-agregar-pregunta:hover { background: #dbeafe; }
+    .btn-agregar-pregunta .material-symbols-outlined { font-size: 16px; }
+    .sin-preguntas {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 12px;
+      background: #f8fafc;
+      border: 1.5px dashed #cbd5e1;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 0.8125rem;
+      margin-bottom: 4px;
+    }
+    .sin-preguntas .material-symbols-outlined { font-size: 20px; }
+    .pregunta-card {
+      background: #f8fafc;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .pregunta-encabezado {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .pregunta-num {
+      background: #137fec;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .pregunta-texto { flex: 1; }
+    .btn-eliminar-pregunta {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ef4444;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .btn-eliminar-pregunta:hover { background: #fee2e2; }
+    .btn-eliminar-pregunta .material-symbols-outlined { font-size: 18px; }
+    .opciones-wrap { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+    .opcion-fila { display: flex; align-items: center; gap: 6px; }
+    .opcion-radio { width: 16px; height: 16px; flex-shrink: 0; cursor: pointer; accent-color: #137fec; }
+    .opcion-input { flex: 1; }
+    .btn-quitar-opcion {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #94a3b8;
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .btn-quitar-opcion:hover { color: #ef4444; }
+    .btn-quitar-opcion .material-symbols-outlined { font-size: 16px; }
+    .btn-add-opcion {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #137fec;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 4px 0;
+      font-family: inherit;
+    }
+    .btn-add-opcion:hover { text-decoration: underline; }
+
     /* Footer */
     .dialog-footer {
       display: flex;
@@ -399,6 +570,11 @@ export class CursoFormDialogComponent {
   guardando     = false;
   subiendoImg   = signal(false);
   previewUrl    = signal<string>(this.data.curso?.imagen ?? '');
+  preguntas     = signal<Pregunta[]>(
+    this.data.curso?.preguntas
+      ? this.data.curso.preguntas.map(p => ({ ...p, opciones: [...p.opciones] }))
+      : []
+  );
 
   form: FormGroup = this.fb.group({
     nombre:               [this.data.curso?.nombre               ?? '', Validators.required],
@@ -458,6 +634,54 @@ export class CursoFormDialogComponent {
     this.previewUrl.set('');
   }
 
+  agregarPregunta() {
+    this.preguntas.update(ps => [...ps, { pregunta: '', opciones: ['', '', '', ''], respuesta_correcta: -1 }]);
+  }
+
+  eliminarPregunta(index: number) {
+    this.preguntas.update(ps => ps.filter((_, i) => i !== index));
+  }
+
+  actualizarTexto(pIndex: number, value: string) {
+    this.preguntas.update(ps => {
+      const copy = ps.map(p => ({ ...p, opciones: [...p.opciones] }));
+      copy[pIndex].pregunta = value;
+      return copy;
+    });
+  }
+
+  actualizarOpcion(pIndex: number, oIndex: number, value: string) {
+    this.preguntas.update(ps => {
+      const copy = ps.map(p => ({ ...p, opciones: [...p.opciones] }));
+      copy[pIndex].opciones[oIndex] = value;
+      return copy;
+    });
+  }
+
+  setRespuesta(pIndex: number, oIndex: number) {
+    this.preguntas.update(ps => {
+      const copy = ps.map(p => ({ ...p, opciones: [...p.opciones] }));
+      copy[pIndex].respuesta_correcta = oIndex;
+      return copy;
+    });
+  }
+
+  agregarOpcion(pIndex: number) {
+    this.preguntas.update(ps => {
+      const copy = ps.map(p => ({ ...p, opciones: [...p.opciones] }));
+      copy[pIndex].opciones.push('');
+      return copy;
+    });
+  }
+
+  eliminarOpcion(pIndex: number, oIndex: number) {
+    this.preguntas.update(ps => {
+      const copy = ps.map(p => ({ ...p, opciones: [...p.opciones] }));
+      copy[pIndex].opciones.splice(oIndex, 1);
+      return copy;
+    });
+  }
+
   async guardar() {
     if (this.form.invalid || this.subiendoImg()) return;
     this.guardando = true;
@@ -466,7 +690,8 @@ export class CursoFormDialogComponent {
       ...values,
       instructor: 'N/A',
       precio: 0,
-      activo: values.activo ? 1 : 0
+      activo: values.activo ? 1 : 0,
+      preguntas: this.preguntas().length > 0 ? this.preguntas() : null
     };
     try {
       await this.data.onSave(payload);
@@ -577,23 +802,28 @@ export class GestionCursosComponent implements OnInit {
   }
 
   abrirDialogoEditar(curso: Curso) {
-    this.dialog.open(CursoFormDialogComponent, {
-      width: '560px',
-      maxWidth: '95vw',
-      panelClass: 'no-padding-dialog',
-      data: {
-        curso,
-        onSave: (payload: Partial<Curso>) => new Promise<void>((resolve, reject) => {
-          this.cursosService.actualizarCurso({ ...curso, ...payload }).subscribe({
-            next: () => {
-              this.mostrarMensaje('Curso actualizado correctamente', 'success');
-              this.cargarCursos();
-              resolve();
-            },
-            error: () => { this.mostrarMensaje('Error al actualizar el curso', 'error'); reject(); }
-          });
-        })
-      }
+    this.cursosService.obtenerCurso(curso.id).subscribe({
+      next: (cursoCompleto) => {
+        this.dialog.open(CursoFormDialogComponent, {
+          width: '560px',
+          maxWidth: '95vw',
+          panelClass: 'no-padding-dialog',
+          data: {
+            curso: cursoCompleto,
+            onSave: (payload: Partial<Curso>) => new Promise<void>((resolve, reject) => {
+              this.cursosService.actualizarCurso({ ...cursoCompleto, ...payload }).subscribe({
+                next: () => {
+                  this.mostrarMensaje('Curso actualizado correctamente', 'success');
+                  this.cargarCursos();
+                  resolve();
+                },
+                error: () => { this.mostrarMensaje('Error al actualizar el curso', 'error'); reject(); }
+              });
+            })
+          }
+        });
+      },
+      error: () => this.mostrarMensaje('Error al cargar el curso', 'error')
     });
   }
 

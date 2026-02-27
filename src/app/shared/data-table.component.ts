@@ -12,6 +12,7 @@ export interface TableColumn {
   label: string;
   sortable?: boolean;
   format?: (value: any) => string;
+  cellClass?: (value: any) => string;
 }
 
 @Component({
@@ -57,7 +58,9 @@ export interface TableColumn {
               {{ column.label }}
             </th>
             <td mat-cell *matCellDef="let row">
-              {{ column.format ? column.format(row[column.key]) : row[column.key] }}
+              <span [class]="column.cellClass ? column.cellClass(row[column.key]) : ''">
+                {{ column.format ? column.format(row[column.key]) : row[column.key] }}
+              </span>
             </td>
           </ng-container>
 
@@ -224,6 +227,20 @@ export interface TableColumn {
       font-size: 0.9rem;
     }
     .no-data .material-symbols-outlined { font-size: 22px; }
+
+    /* Badges de celda reutilizables */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .badge-aprobado  { background: #dcfce7; color: #15803d; }
+    .badge-reprobado { background: #fee2e2; color: #b91c1c; }
+    .badge-activo    { background: #dcfce7; color: #15803d; }
+    .badge-inactivo  { background: #f1f5f9; color: #64748b; }
   `]
 })
 export class DataTableComponent<T> implements OnInit {

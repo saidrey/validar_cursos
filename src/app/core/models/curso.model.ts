@@ -1,3 +1,9 @@
+export interface Pregunta {
+  pregunta: string;
+  opciones: string[];
+  respuesta_correcta: number;
+}
+
 export interface Curso {
   id: number;
   nombre: string;
@@ -12,4 +18,5 @@ export interface Curso {
   imagen: string;
   activo: number;
   fecha_creacion: string;
+  preguntas?: Pregunta[] | null;
 }

@@ -1,50 +1,310 @@
 <div class="page-container">
 
-  <!-- Header -->
-  <div class="page-header">
-    <div>
-      <h1 class="page-title">Mis Exámenes</h1>
-      <p class="page-subtitle">Historial de exámenes presentados</p>
+  <!-- ══════════════════════════════════════════════════════
+       VISTA ADMIN: GESTIÓN DE TODOS LOS EXÁMENES
+  ══════════════════════════════════════════════════════ -->
+  @if (esAdmin) {
+
+    <div class="page-header">
+      <div class="page-title-wrap">
+        <span class="material-symbols-outlined title-icon">quiz</span>
+        <div>
+          <h1>Gestión de Exámenes</h1>
+          <p>Historial de todos los exámenes presentados en la plataforma</p>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <!-- Loading -->
-  <div *ngIf="cargando" class="loading-state">
-    <div class="spinner"></div>
-    <p>Cargando exámenes...</p>
-  </div>
+    <div class="table-card">
+      @if (cargandoAdmin && examenesAdmin.length === 0) {
+        <div class="loading-state">
+          <mat-spinner diameter="40"></mat-spinner>
+          <span>Cargando exámenes...</span>
+        </div>
+      } @else {
+        <app-data-table
+          [columns]="columnasAdmin"
+          [data]="examenesAdmin"
+          [pagination]="paginacionAdmin"
+          [hasActions]="false"
+          [rowClass]="rowClassAdmin"
+          (paramsChange)="onParamsAdminChange($event)">
+        </app-data-table>
+      }
+    </div>
 
-  <!-- Sin exámenes -->
-  <div *ngIf="!cargando && examenes.length === 0" class="empty-state">
-    <span class="material-symbols-outlined empty-icon">quiz</span>
-    <h3>Aún no has presentado exámenes</h3>
-    <p>Cuando presentes un examen, aparecerá aquí con tu nota y la fecha.</p>
-  </div>
+  } @else {
 
-  <!-- Tabla -->
-  <div *ngIf="!cargando && examenes.length > 0" class="table-card">
-    <table class="exam-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Curso</th>
-          <th>Nota</th>
-          <th>Fecha</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let examen of examenes; let i = index">
-          <td class="col-num">{{ i + 1 }}</td>
-          <td class="col-curso">{{ examen.curso_nombre }}</td>
-          <td class="col-nota">
-            <span class="nota-badge" [ngClass]="getNotaClase(examen.nota)">
-              {{ examen.nota | number:'1.1-1' }}
-            </span>
-          </td>
-          <td class="col-fecha">{{ examen.fecha_presentacion | date:'dd/MM/yyyy HH:mm' }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <!-- ══════════════════════════════════════════════════════
+       VISTAS USUARIO: HISTORIAL + FLUJO DE EXAMEN
+  ══════════════════════════════════════════════════════ -->
+
+    <!-- LISTA: historial propio -->
+    @if (vista === 'lista') {
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Mis Exámenes</h1>
+          <p class="page-subtitle">Historial de exámenes presentados</p>
+        </div>
+        <button class="btn-presentar" (click)="iniciarFlujo()">
+          <span class="material-symbols-outlined">quiz</span>
+          Presentar Examen
+        </button>
+      </div>
+
+      @if (cargando) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando exámenes...</p>
+        </div>
+      } @else if (examenes.length === 0) {
+        <div class="empty-state">
+          <span class="material-symbols-outlined empty-icon">quiz</span>
+          <h3>Aún no has presentado exámenes</h3>
+          <p>Presiona "Presentar Examen" para comenzar.</p>
+        </div>
+      } @else {
+        <div class="table-card">
+          <table class="exam-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Curso</th>
+                <th>Nota</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (examen of examenes; track examen.id; let i = $index) {
+                <tr>
+                  <td class="col-num">{{ i + 1 }}</td>
+                  <td class="col-curso">{{ examen.curso_nombre }}</td>
+                  <td class="col-nota">
+                    <span class="nota-badge" [ngClass]="getNotaClase(examen.nota)">
+                      {{ examen.nota | number:'1.1-1' }}%
+                    </span>
+                  </td>
+                  <td class="col-estado">
+                    <span class="estado-badge" [class.aprobado]="examen.nota >= 60" [class.reprobado]="examen.nota < 60">
+                      {{ examen.nota >= 60 ? 'Aprobado' : 'Reprobado' }}
+                    </span>
+                  </td>
+                  <td class="col-fecha">{{ examen.fecha_presentacion | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+    }
+
+    <!-- SELECCIONAR CURSO -->
+    @if (vista === 'seleccionar') {
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Seleccionar Curso</h1>
+          <p class="page-subtitle">Elige el curso para presentar el examen</p>
+        </div>
+        <button class="btn-volver" (click)="volverALista()">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Volver
+        </button>
+      </div>
+
+      @if (cargandoCursos) {
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Cargando cursos...</p>
+        </div>
+      } @else if (cursosConExamen.length === 0) {
+        <div class="empty-state">
+          <span class="material-symbols-outlined empty-icon">school</span>
+          <h3>No hay cursos con examen disponibles</h3>
+          <p>Aún no se han configurado preguntas para ningún curso.</p>
+        </div>
+      } @else {
+        <div class="cursos-grid">
+          @for (curso of cursosConExamen; track curso.id) {
+            <div class="curso-card" (click)="seleccionarCurso(curso)">
+              @if (curso.imagen) {
+                <img [src]="curso.imagen" [alt]="curso.nombre" class="curso-img">
+              } @else {
+                <div class="curso-img-placeholder">
+                  <span class="material-symbols-outlined">school</span>
+                </div>
+              }
+              <div class="curso-info">
+                <h3 class="curso-nombre">{{ curso.nombre }}</h3>
+                <p class="curso-resumen">{{ curso.resumen || curso.descripcion }}</p>
+                <div class="curso-meta">
+                  <span class="preguntas-count">
+                    <span class="material-symbols-outlined">help</span>
+                    {{ curso.preguntas!.length }} pregunta{{ curso.preguntas!.length !== 1 ? 's' : '' }}
+                  </span>
+                  <span class="btn-iniciar">
+                    Iniciar examen
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+    }
+
+    <!-- TOMANDO EL EXAMEN -->
+    @if (vista === 'examen') {
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">{{ cursoSeleccionado?.nombre }}</h1>
+          <p class="page-subtitle">Responde todas las preguntas y luego verifica tu examen</p>
+        </div>
+        <button class="btn-volver" (click)="vista = 'seleccionar'">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Cambiar curso
+        </button>
+      </div>
+
+      <div class="progreso-bar-wrap">
+        <div class="progreso-info">
+          <span>{{ respondidas() }} de {{ preguntas.length }} respondidas</span>
+          <span>{{ preguntas.length - respondidas() }} restantes</span>
+        </div>
+        <div class="progreso-bar">
+          <div class="progreso-fill" [style.width.%]="(respondidas() / preguntas.length) * 100"></div>
+        </div>
+      </div>
+
+      <div class="preguntas-lista">
+        @for (p of preguntas; track $index; let pi = $index) {
+          <div class="pregunta-card" [class.respondida]="respuestas[pi] !== ''">
+            <div class="pregunta-header">
+              <span class="pregunta-num">{{ pi + 1 }}</span>
+              <p class="pregunta-texto">{{ p.pregunta }}</p>
+            </div>
+            <div class="opciones-lista">
+              @for (op of p.opciones; track $index) {
+                <label class="opcion-label" [class.seleccionada]="respuestas[pi] === op">
+                  <input type="radio"
+                         [name]="'pregunta_' + pi"
+                         [value]="op"
+                         [checked]="respuestas[pi] === op"
+                         (change)="responder(pi, op)"
+                         class="opcion-radio">
+                  <span class="opcion-circulo"></span>
+                  <span class="opcion-texto">{{ op }}</span>
+                </label>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="verificar-wrap">
+        <p class="verificar-hint" [class.completo]="todasRespondidas()">
+          @if (todasRespondidas()) {
+            ¡Todas las preguntas respondidas! Puedes verificar tu examen.
+          } @else {
+            Responde todas las preguntas para poder verificar.
+          }
+        </p>
+        <button class="btn-verificar"
+                [disabled]="!todasRespondidas()"
+                (click)="verificar()">
+          <span class="material-symbols-outlined">check_circle</span>
+          Verificar examen
+        </button>
+      </div>
+
+    }
+
+    <!-- RESULTADO -->
+    @if (vista === 'resultado') {
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Resultado del Examen</h1>
+          <p class="page-subtitle">{{ cursoSeleccionado?.nombre }}</p>
+        </div>
+      </div>
+
+      <div class="resultado-card">
+        <div class="nota-circulo" [class.aprobado]="aprobado" [class.reprobado]="!aprobado">
+          <span class="nota-valor">{{ resultadoNota | number:'1.1-1' }}%</span>
+          <span class="nota-label">{{ aprobado ? '¡Aprobado!' : 'Reprobado' }}</span>
+        </div>
+
+        <div class="resultado-detalle">
+          <div class="detalle-item">
+            <span class="material-symbols-outlined" style="color: #15803d">check_circle</span>
+            <span><strong>{{ correctas }}</strong> respuesta{{ correctas !== 1 ? 's' : '' }} correcta{{ correctas !== 1 ? 's' : '' }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="material-symbols-outlined" style="color: #b91c1c">cancel</span>
+            <span><strong>{{ preguntas.length - correctas }}</strong> respuesta{{ (preguntas.length - correctas) !== 1 ? 's' : '' }} incorrecta{{ (preguntas.length - correctas) !== 1 ? 's' : '' }}</span>
+          </div>
+          <div class="detalle-item">
+            <span class="material-symbols-outlined" style="color: #64748b">quiz</span>
+            <span><strong>{{ preguntas.length }}</strong> preguntas en total</span>
+          </div>
+          <div class="detalle-aprobacion">
+            <span class="material-symbols-outlined">{{ aprobado ? 'emoji_events' : 'info' }}</span>
+            {{ aprobado ? 'Superaste el mínimo de aprobación (60%)' : 'Necesitas al menos 60% para aprobar' }}
+          </div>
+        </div>
+
+        <div class="revision-wrap">
+          <h3 class="revision-titulo">Revisión de respuestas</h3>
+          @for (p of preguntas; track $index; let pi = $index) {
+            <div class="revision-item" [class.correcta]="p.opciones[p.respuesta_correcta] === respuestas[pi]" [class.incorrecta]="p.opciones[p.respuesta_correcta] !== respuestas[pi]">
+              <div class="revision-pregunta">
+                <span class="revision-icon material-symbols-outlined">
+                  {{ p.opciones[p.respuesta_correcta] === respuestas[pi] ? 'check_circle' : 'cancel' }}
+                </span>
+                <span>{{ pi + 1 }}. {{ p.pregunta }}</span>
+              </div>
+              <div class="revision-respuestas">
+                <span class="revision-tu">Tu respuesta: <strong>{{ respuestas[pi] || '(sin respuesta)' }}</strong></span>
+                @if (p.opciones[p.respuesta_correcta] !== respuestas[pi]) {
+                  <span class="revision-correcta">Correcta: <strong>{{ p.opciones[p.respuesta_correcta] }}</strong></span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="resultado-acciones">
+          @if (!guardado) {
+            <button class="btn-guardar" [disabled]="guardando" (click)="guardarResultado()">
+              <span class="material-symbols-outlined">save</span>
+              {{ guardando ? 'Guardando...' : 'Guardar resultado' }}
+            </button>
+          } @else {
+            <div class="guardado-ok">
+              <span class="material-symbols-outlined">check_circle</span>
+              Resultado guardado correctamente
+            </div>
+          }
+          <button class="btn-reintentar" (click)="intentarDeNuevo()">
+            <span class="material-symbols-outlined">refresh</span>
+            Intentar de nuevo
+          </button>
+          <button class="btn-volver-lista" (click)="volverALista()">
+            <span class="material-symbols-outlined">list</span>
+            Ver mis exámenes
+          </button>
+        </div>
+      </div>
+
+    }
+
+  }
 
 </div>
