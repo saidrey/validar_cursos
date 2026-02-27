@@ -502,13 +502,34 @@ export class GestionDiplomasComponent implements OnInit {
     .footer-texto strong { color: #0a1d37; }
     .qr-img { width: 115px; height: 115px; object-fit: contain; display: block; flex-shrink: 0; }
 
+    /* ── Aviso en pantallas pequeñas (móvil/tablet) ── */
+    .mobile-tip {
+      display: none;
+      background: #fffbeb;
+      border-top: 1px solid #fde68a;
+      padding: 8px 20px;
+      font-size: 12px;
+      font-family: sans-serif;
+      color: #92400e;
+      align-items: center;
+      gap: 8px;
+    }
+    @media screen and (max-width: 900px) {
+      .mobile-tip { display: flex; }
+    }
+
     /* ── Ocultar toolbar al imprimir ── */
     @media print {
-      body { background: #fff; }
+      @page { size: A4 landscape; margin: 0; }
+      html { width: 297mm; }
+      body { background: #fff; width: 297mm; margin: 0; }
       .toolbar { display: none; }
-      .diploma-wrap { padding: 0; }
+      .mobile-tip { display: none; }
+      .diploma-wrap { padding: 0; display: block; }
       .diploma {
         box-shadow: none;
+        width: 297mm !important;
+        min-height: 210mm;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
         background-image: url('${base}/images/certificate_border.jpg');
@@ -522,6 +543,9 @@ export class GestionDiplomasComponent implements OnInit {
   <div class="toolbar">
     <span>Vista previa del diploma — verifica que las imágenes sean correctas antes de imprimir</span>
     <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+  <div class="mobile-tip">
+    ⚠️ <span>Desde el celular, en el menú de impresión selecciona orientación <strong>Horizontal</strong> (Landscape) para que el diploma no se corte.</span>
   </div>
 
   <div class="diploma-wrap">
