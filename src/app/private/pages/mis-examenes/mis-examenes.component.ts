@@ -68,6 +68,7 @@ export class MisExamenesComponent implements OnInit {
   correctas = 0;
   guardando = false;
   guardado = false;
+  mostrarModalCertificado = false;
 
   // ══ Ciclo de vida ═══════════════════════════════════════════
 
@@ -165,6 +166,7 @@ export class MisExamenesComponent implements OnInit {
         this.guardando = false;
         this.guardado  = true;
         this.cargarExamenes();
+        if (this.aprobado) { this.mostrarModalCertificado = true; }
       },
       error: () => { this.guardando = false; }
     });
@@ -176,11 +178,16 @@ export class MisExamenesComponent implements OnInit {
     this.vista = 'examen';
   }
 
+  cerrarModalCertificado() {
+    this.mostrarModalCertificado = false;
+  }
+
   volverALista() {
     this.vista = 'lista';
     this.cursoSeleccionado = null;
     this.respuestas = [];
     this.guardado = false;
+    this.mostrarModalCertificado = false;
   }
 
   // ── Utilidades ─────────────────────────────────────────────

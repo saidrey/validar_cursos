@@ -88,25 +88,62 @@
     </section>
 
     <!-- Instructor -->
-    <!-- <section class="py-20 border-t border-slate-100">
-      <h2 class="text-3xl font-bold text-navy-blue mb-10 text-center">Conoce a tu Instructor</h2>
-      <div class="flex flex-col md:flex-row items-center gap-10 bg-white p-2">
-        <div class="shrink-0">
-          <img [src]="curso.imagen || 'https://via.placeholder.com/192'" 
-               [alt]="curso.instructor"
-               class="w-48 h-48 rounded-3xl object-cover shadow-2xl">
-        </div>
-        <div class="flex-grow space-y-4 text-center md:text-left">
-          <div>
-            <h4 class="text-2xl font-bold text-navy-blue">{{ curso.instructor }}</h4>
-            <p class="text-primary font-medium">Instructor Certificado</p>
+    <!-- <section class="py-20 border-t border-slate-100">...</section> -->
+
+    <!-- ── Inscripción Gratuita + Certificado ─────────────── -->
+    <section class="py-10 border-t border-slate-100">
+      <div class="curso-gratis-card">
+        <div class="curso-gratis-left">
+          <div class="gratis-badge-grande">
+            <span class="material-symbols-outlined">celebration</span>
+            100% GRATIS
           </div>
-          <p class="text-slate-600 leading-relaxed">
-            Con años de experiencia en la industria, nuestro instructor te guiará paso a paso para que domines cada concepto y puedas aplicarlo en situaciones reales del mundo profesional.
+          <h2 class="gratis-titulo">¡Aprende sin límites!</h2>
+          <p class="gratis-desc">
+            Puedes realizar <strong>todos los cursos que desees</strong> sin ningún costo.
+            Regístrate, estudia a tu ritmo y obtén conocimientos de calidad completamente gratis.
           </p>
+          <ul class="gratis-lista">
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Acceso ilimitado a todos los cursos
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Aprende a tu propio ritmo, sin fechas límite
+            </li>
+            <li>
+              <span class="material-symbols-outlined">check_circle</span>
+              Evaluaciones y exámenes incluidos sin costo
+            </li>
+          </ul>
+          <button class="gratis-btn" (click)="abrirModal()">
+            <span class="material-symbols-outlined">workspace_premium</span>
+            ¿Cómo obtengo mi certificado?
+          </button>
+        </div>
+        <div class="curso-gratis-right">
+          <div class="cert-info-card">
+            <div class="cert-info-header">
+              <span class="material-symbols-outlined">workspace_premium</span>
+              <span>Obtén tu Certificado</span>
+            </div>
+            <p class="cert-info-desc">
+              Al aprobar el examen del curso, envía tu comprobante de pago por cualquiera de estos medios y recibirás tu certificado en PDF:
+            </p>
+            <a class="cert-contacto" href="mailto:examenes@aulavirtualcentrodecompetencia.com">
+              <span class="material-symbols-outlined">mail</span>
+              <span>examenes&#64;aulavirtualcentrodecompetencia.com</span>
+            </a>
+            <a class="cert-contacto cert-wa" href="https://wa.me/573332669399" target="_blank" rel="noopener">
+              <span class="material-symbols-outlined">chat</span>
+              <span>WhatsApp: 333 266 9399</span>
+            </a>
+            <p class="cert-nota">Recibirás tu certificado a vuelta de correo en formato PDF.</p>
+          </div>
         </div>
       </div>
-    </section> -->
+    </section>
   </div>
 </main>
 
@@ -121,29 +158,83 @@
 <app-footer *ngIf="!cargando"></app-footer>
 
 <!-- Sticky Bottom Bar -->
-<div *ngIf="!cargando && curso" 
+<div *ngIf="!cargando && curso"
      class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-[60] py-4 px-4 sm:px-6 lg:px-8 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)]">
   <div class="max-w-7xl mx-auto flex items-center justify-between">
-    <div class="hidden sm:block">
-      <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Precio del curso</p>
-      <div class="flex items-center gap-3">
-        <span class="text-2xl font-extrabold text-navy-blue">${{ curso.precio }}</span>
+    <div class="hidden sm:flex flex-col gap-0.5">
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Inscripción</span>
+      <div class="flex items-center gap-2">
+        <span class="sticky-gratis-badge">GRATIS</span>
+        <span class="text-xs text-slate-500">Todos los cursos sin costo</span>
       </div>
     </div>
-    
-    <div class="flex items-center gap-4 w-full sm:w-auto">
-      <div class="flex flex-col sm:hidden">
-        <span class="text-xl font-extrabold text-navy-blue">${{ curso.precio }}</span>
-      </div>
+
+    <div class="flex items-center gap-3 w-full sm:w-auto">
+      <span class="sticky-gratis-badge sm:hidden">GRATIS</span>
       <a [routerLink]="['/cursos', curso.id, 'contenido']"
          class="flex-1 sm:flex-none bg-white hover:bg-slate-50 text-primary border-2 border-primary px-6 py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2">
         <span class="material-symbols-outlined text-lg">play_circle</span>
         Iniciar curso
       </a>
-      <button [routerLink]="['/contacto']" [queryParams]="{curso: curso.id}" class="flex-1 sm:flex-none bg-primary hover:bg-navy-blue text-white px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
-        Inscribirse ahora
-        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+      <button (click)="abrirModal()"
+              class="flex-1 sm:flex-none bg-primary hover:bg-navy-blue text-white px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-lg">workspace_premium</span>
+        Obtener certificado
       </button>
     </div>
   </div>
 </div>
+
+<!-- Modal: Inscripción gratuita + Certificado -->
+@if (mostrarModal) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <button class="modal-close" (click)="cerrarModal()" aria-label="Cerrar">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="modal-gratis-banner">
+        <span class="material-symbols-outlined modal-gratis-icon">celebration</span>
+        <span class="modal-gratis-text">100% GRATIS</span>
+      </div>
+
+      <h2 class="modal-titulo">¡Aprende sin costo!</h2>
+      <p class="modal-subtitulo">{{ curso?.nombre }}</p>
+
+      <p class="modal-desc">
+        Puedes realizar <strong>todos nuestros cursos de forma gratuita</strong>,
+        sin restricciones y a tu propio ritmo. No necesitas pagar nada para aprender.
+      </p>
+
+      <div class="modal-divider">
+        <span class="material-symbols-outlined">workspace_premium</span>
+        ¿Quieres tu certificado?
+      </div>
+
+      <p class="modal-cert-desc">
+        Al aprobar el examen del curso, envía el comprobante de pago por cualquiera de estos medios
+        y recibirás tu certificado oficial en formato PDF:
+      </p>
+
+      <div class="modal-contactos">
+        <a class="modal-contacto-item" href="mailto:examenes@aulavirtualcentrodecompetencia.com">
+          <span class="material-symbols-outlined">mail</span>
+          <span>examenes&#64;aulavirtualcentrodecompetencia.com</span>
+        </a>
+        <a class="modal-contacto-item modal-contacto-wa" href="https://wa.me/573332669399" target="_blank" rel="noopener">
+          <span class="material-symbols-outlined">chat</span>
+          <span>WhatsApp: 333 266 9399</span>
+        </a>
+      </div>
+
+      <p class="modal-nota">Recibirás tu certificado a vuelta de correo en formato PDF.</p>
+
+      <a [routerLink]="['/cursos', curso?.id, 'contenido']"
+         class="modal-btn-iniciar">
+        <span class="material-symbols-outlined">play_circle</span>
+        Iniciar el curso ahora — gratis
+      </a>
+      <button class="modal-btn-cerrar" (click)="cerrarModal()">Cerrar</button>
+    </div>
+  </div>
+}

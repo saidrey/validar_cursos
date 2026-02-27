@@ -21,6 +21,7 @@ export class CursoDetalleComponent implements OnInit {
   curso: Curso | null = null;
   cargando = true;
   resumenItems: string[] = [];
+  mostrarModal = false;
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -43,6 +44,9 @@ export class CursoDetalleComponent implements OnInit {
       }
     });
   }
+
+  abrirModal() { this.mostrarModal = true; }
+  cerrarModal() { this.mostrarModal = false; }
 
   parsearResumen(resumen: string): string[] {
     if (!resumen) return [];

@@ -260,26 +260,6 @@
           </div>
         </div>
 
-        <div class="revision-wrap">
-          <h3 class="revision-titulo">Revisión de respuestas</h3>
-          @for (p of preguntas; track $index; let pi = $index) {
-            <div class="revision-item" [class.correcta]="p.opciones[p.respuesta_correcta] === respuestas[pi]" [class.incorrecta]="p.opciones[p.respuesta_correcta] !== respuestas[pi]">
-              <div class="revision-pregunta">
-                <span class="revision-icon material-symbols-outlined">
-                  {{ p.opciones[p.respuesta_correcta] === respuestas[pi] ? 'check_circle' : 'cancel' }}
-                </span>
-                <span>{{ pi + 1 }}. {{ p.pregunta }}</span>
-              </div>
-              <div class="revision-respuestas">
-                <span class="revision-tu">Tu respuesta: <strong>{{ respuestas[pi] || '(sin respuesta)' }}</strong></span>
-                @if (p.opciones[p.respuesta_correcta] !== respuestas[pi]) {
-                  <span class="revision-correcta">Correcta: <strong>{{ p.opciones[p.respuesta_correcta] }}</strong></span>
-                }
-              </div>
-            </div>
-          }
-        </div>
-
         <div class="resultado-acciones">
           @if (!guardado) {
             <button class="btn-guardar" [disabled]="guardando" (click)="guardarResultado()">
@@ -305,6 +285,37 @@
 
     }
 
+  }
+
+  <!-- ══ MODAL: Reclamar certificado ══════════════════════════ -->
+  @if (mostrarModalCertificado) {
+    <div class="modal-overlay" (click)="cerrarModalCertificado()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <div class="modal-icon">
+          <span class="material-symbols-outlined">workspace_premium</span>
+        </div>
+        <h2 class="modal-titulo">¡Felicitaciones, aprobaste!</h2>
+        <p class="modal-curso">{{ cursoSeleccionado?.nombre }}</p>
+        <p class="modal-desc">
+          Para reclamar el certificado que certifica que cursaste y aprobaste este curso,
+          envía el comprobante de pago por alguno de estos medios:
+        </p>
+        <div class="modal-contactos">
+          <a class="modal-contacto-item" href="mailto:examenes@aulavirtualcentrodecompetencia.com">
+            <span class="material-symbols-outlined">mail</span>
+            <span>examenes&#64;aulavirtualcentrodecompetencia.com</span>
+          </a>
+          <a class="modal-contacto-item" href="https://wa.me/573332669399" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined">chat</span>
+            <span>WhatsApp: 333 266 9399</span>
+          </a>
+        </div>
+        <p class="modal-nota">
+          Recibirás a vuelta de correo tu certificado en formato PDF.
+        </p>
+        <button class="modal-btn-cerrar" (click)="cerrarModalCertificado()">Entendido</button>
+      </div>
+    </div>
   }
 
 </div>
