@@ -68,6 +68,13 @@ export interface TableColumn {
           <ng-container matColumnDef="actions" *ngIf="hasActions">
             <th mat-header-cell *matHeaderCellDef class="actions-header">Acciones</th>
             <td mat-cell *matCellDef="let row" class="actions-cell">
+              @if (hasPrint) {
+                <button class="action-btn print-btn"
+                        (click)="printItem.emit(row)"
+                        matTooltip="Imprimir diploma">
+                  <span class="material-symbols-outlined">print</span>
+                </button>
+              }
               <button class="action-btn edit-btn"
                       (click)="editItem.emit(row)"
                       matTooltip="Editar">
@@ -191,7 +198,7 @@ export interface TableColumn {
 
     tr.table-row:hover { background-color: #f8fafc; }
 
-    .actions-header { width: 100px; text-align: center; }
+    .actions-header { width: 140px; text-align: center; }
     .actions-cell { text-align: center; white-space: nowrap; }
 
     /* Botones de acción */
@@ -207,6 +214,8 @@ export interface TableColumn {
     }
     .action-btn .material-symbols-outlined { font-size: 18px; }
 
+    .print-btn { color: #059669; }
+    .print-btn:hover { background: #d1fae5; }
     .edit-btn  { color: #137fec; }
     .edit-btn:hover  { background: #e0f2fe; }
     .delete-btn { color: #dc2626; }
@@ -248,11 +257,13 @@ export class DataTableComponent<T> implements OnInit {
   @Input() data: T[] = [];
   @Input() pagination?: PaginatedResponse<T>['pagination'];
   @Input() hasActions = false;
+  @Input() hasPrint = false;
   @Input() rowClass?: (row: T) => string;
 
   @Output() paramsChange = new EventEmitter<TableParams>();
   @Output() editItem = new EventEmitter<T>();
   @Output() deleteItem = new EventEmitter<T>();
+  @Output() printItem = new EventEmitter<T>();
 
   searchTerm = '';
   displayedColumns: string[] = [];

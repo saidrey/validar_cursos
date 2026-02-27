@@ -33,10 +33,12 @@
         [data]="diplomas"
         [pagination]="paginacion"
         [hasActions]="true"
+        [hasPrint]="true"
         [rowClass]="rowClass"
         (paramsChange)="onParamsChange($event)"
         (editItem)="abrirDialogoEditar($event)"
-        (deleteItem)="confirmarEliminar($event)">
+        (deleteItem)="confirmarEliminar($event)"
+        (printItem)="imprimirDiploma($event)">
       </app-data-table>
     }
   </div>

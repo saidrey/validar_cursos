@@ -109,6 +109,17 @@ export class ConfirmDiplomaDialogComponent {
           </div>
         </div>
 
+        <!-- Email -->
+        <div class="field-group">
+          <label class="field-label">Correo electrónico</label>
+          <input type="email" formControlName="email"
+                 placeholder="correo@ejemplo.com"
+                 class="field-input" [class.field-error]="form.get('email')?.invalid && form.get('email')?.touched">
+          @if (form.get('email')?.invalid && form.get('email')?.touched) {
+            <span class="error-msg">Correo inválido</span>
+          }
+        </div>
+
         <!-- Fecha emisión -->
         <div class="field-group">
           <label class="field-label">Fecha de emisión</label>
@@ -185,6 +196,7 @@ export class DiplomaFormDialogComponent {
     nombre_estudiante: [this.data.diploma?.nombre_estudiante ?? '', Validators.required],
     tipo_documento: [this.data.diploma?.tipo_documento ?? '', Validators.required],
     documento: [this.data.diploma?.documento ?? '', Validators.required],
+    email: [this.data.diploma?.email ?? '', Validators.email],
     fecha_emision: [this.data.diploma?.fecha_emision ?? new Date().toISOString().split('T')[0]],
     activo: [this.data.diploma ? this.data.diploma.activo === 1 : true]
   });
@@ -244,6 +256,7 @@ export class GestionDiplomasComponent implements OnInit {
       sortable: false,
     },
     { key: 'documento', label: 'Documento', sortable: true },
+    { key: 'email', label: 'Email', sortable: true },
     {
       key: 'fecha_emision',
       label: 'Fecha emisión',
@@ -346,6 +359,212 @@ export class GestionDiplomasComponent implements OnInit {
         });
       }
     });
+  }
+
+  imprimirDiploma(diploma: Diploma) {
+    const base = window.location.origin;
+    const fecha = diploma.fecha_emision
+      ? diploma.fecha_emision.split('-').reverse().join('-')
+      : '-';
+    const horas = diploma.curso_duracion ?? '50';
+
+    const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Diploma - ${diploma.nombre_estudiante}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    @page { size: A4 landscape; margin: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #e5e7eb; font-family: 'Georgia', 'Times New Roman', serif; color: #0a1d37; }
+
+    /* ── Barra superior con botón imprimir ── */
+    .toolbar {
+      background: #1e293b;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .toolbar span { color: #94a3b8; font-size: 13px; font-family: sans-serif; }
+    .btn-print {
+      background: #137fec;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-print:hover { background: #0f6fd4; }
+
+    /* ── Diploma ── */
+    .diploma-wrap {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .diploma {
+      width: 297mm;
+      min-height: 210mm;
+      padding: 26mm 34mm;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background-image: url('${base}/images/certificate_border.jpg');
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .header-medalla { width: 105px; height: 105px; object-fit: contain; display: block; }
+    .header-logo    { width: 110px; height: 105px; object-fit: contain; display: block; }
+    .header-title {
+      text-align: center; flex: 1; line-height: 1.25; padding: 0 20px;
+      border-bottom: 1.5px solid #c8a951;
+      padding-bottom: 10px;
+    }
+    .title-line1 {
+      font-family: 'Cinzel', 'Georgia', serif;
+      font-size: 18px; font-weight: 400;
+      letter-spacing: 5px; text-transform: uppercase; color: #555;
+    }
+    .title-line2 {
+      font-family: 'Cinzel', 'Georgia', serif;
+      font-size: 30px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: #0a1d37;
+    }
+
+    /* ── Body ── */
+    .body {
+      flex: 1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      gap: 6px;
+      padding: 0 10px;
+    }
+    .certifica-que {
+      font-size: 11px; font-style: italic;
+      letter-spacing: 3px; text-transform: uppercase; color: #777;
+    }
+    .nombre-estudiante {
+      font-size: 30px; font-weight: bold;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: #1a4a9f; margin: 3px 0;
+    }
+    .documento-info { font-size: 11.5px; color: #444; margin-bottom: 5px; }
+    .aprobo-texto {
+      font-size: 11px; font-style: italic;
+      letter-spacing: 2px; text-transform: uppercase; color: #666;
+      margin-top: 16px;
+    }
+    .nombre-curso {
+      font-size: 20px; font-weight: bold;
+      text-transform: uppercase; color: #1a4a9f; margin: 4px 0;
+    }
+    .culmino-texto { font-size: 11px; color: #555; }
+    .detalles {
+      display: flex; gap: 60px; margin-top: 12px;
+      font-size: 12px; font-weight: 700; color: #0a1d37;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 12px;
+      gap: 16px;
+    }
+    .footer-texto {
+      font-size: 11px; color: #555; line-height: 1.7;
+      border-top: 1.5px solid #c8a951;
+      padding-top: 8px;
+      flex: 1;
+    }
+    .footer-texto strong { color: #0a1d37; }
+    .qr-img { width: 115px; height: 115px; object-fit: contain; display: block; flex-shrink: 0; }
+
+    /* ── Ocultar toolbar al imprimir ── */
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .diploma-wrap { padding: 0; }
+      .diploma {
+        box-shadow: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        background-image: url('${base}/images/certificate_border.jpg');
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <span>Vista previa del diploma — verifica que las imágenes sean correctas antes de imprimir</span>
+    <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+
+  <div class="diploma-wrap">
+    <div class="diploma">
+      <div class="header">
+        <img class="header-medalla" src="${base}/images/medalla.png" alt="Medalla">
+        <div class="header-title">
+          <div class="title-line1">Aula Virtual</div>
+          <div class="title-line2">Centro de Competencias</div>
+        </div>
+        <img class="header-logo" src="${base}/images/logo.png" alt="Logo">
+      </div>
+
+      <div class="body">
+        <p class="certifica-que">Certifica que,</p>
+        <h1 class="nombre-estudiante">${diploma.nombre_estudiante}</h1>
+        <p class="documento-info">identificado con número de documento: ${diploma.tipo_documento} ${diploma.documento}</p>
+        <p class="aprobo-texto">aprobó el curso de:</p>
+        <h2 class="nombre-curso">${diploma.curso_nombre ?? ''}</h2>
+        <p class="culmino-texto">habiendo culminado satisfactoriamente todos los módulos y actividades del programa</p>
+        <div class="detalles">
+          <span>No. de horas: ${horas}</span>
+          <span>Fecha: ${fecha}</span>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p class="footer-texto">
+          Para verificar la autenticidad de este documento escanea el código QR:<br>
+          <strong>https://aulavirtualcentrodecompetencia.com/validar</strong>
+        </p>
+        <img class="qr-img" src="${base}/images/qr_url.png" alt="QR Verificación">
+      </div>
+    </div>
+  </div>
+</body>
+</html>`;
+
+    const win = window.open('', '_blank', 'width=1280,height=900');
+    if (win) {
+      win.document.write(html);
+      win.document.close();
+    }
   }
 
   private mostrarMensaje(mensaje: string, tipo: 'success' | 'error') {
