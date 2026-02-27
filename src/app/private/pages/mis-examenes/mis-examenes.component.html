@@ -123,8 +123,13 @@
       } @else if (cursosConExamen.length === 0) {
         <div class="empty-state">
           <span class="material-symbols-outlined empty-icon">school</span>
-          <h3>No hay cursos con examen disponibles</h3>
-          <p>Aún no se han configurado preguntas para ningún curso.</p>
+          @if (examenes.length > 0) {
+            <h3>Ya presentaste todos los exámenes disponibles</h3>
+            <p>No tienes cursos pendientes por examinar.</p>
+          } @else {
+            <h3>No hay cursos con examen disponibles</h3>
+            <p>Aún no se han configurado preguntas para ningún curso.</p>
+          }
         </div>
       } @else {
         <div class="cursos-grid">
@@ -261,15 +266,22 @@
         </div>
 
         <div class="resultado-acciones">
-          @if (!guardado) {
-            <button class="btn-guardar" [disabled]="guardando" (click)="guardarResultado()">
-              <span class="material-symbols-outlined">save</span>
-              {{ guardando ? 'Guardando...' : 'Guardar resultado' }}
-            </button>
+          @if (aprobado) {
+            @if (!guardado) {
+              <button class="btn-guardar" [disabled]="guardando" (click)="guardarResultado()">
+                <span class="material-symbols-outlined">save</span>
+                {{ guardando ? 'Guardando...' : 'Guardar resultado' }}
+              </button>
+            } @else {
+              <div class="guardado-ok">
+                <span class="material-symbols-outlined">check_circle</span>
+                Resultado guardado correctamente
+              </div>
+            }
           } @else {
-            <div class="guardado-ok">
-              <span class="material-symbols-outlined">check_circle</span>
-              Resultado guardado correctamente
+            <div class="info-reprobado">
+              <span class="material-symbols-outlined">info</span>
+              Solo se guardan los exámenes aprobados. Inténtalo de nuevo para mejorar tu nota.
             </div>
           }
           <button class="btn-reintentar" (click)="intentarDeNuevo()">

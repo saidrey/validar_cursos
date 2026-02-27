@@ -114,9 +114,12 @@ export class MisExamenesComponent implements OnInit {
   iniciarFlujo() {
     this.cargandoCursos = true;
     this.vista = 'seleccionar';
+    const cursosYaRealizados = new Set(this.examenes.map(e => e.curso_id));
     this.cursosService.obtenerCursos().subscribe({
       next: (cursos) => {
-        this.cursosConExamen = cursos.filter(c => c.preguntas && c.preguntas.length > 0);
+        this.cursosConExamen = cursos.filter(c =>
+          c.preguntas && c.preguntas.length > 0 && !cursosYaRealizados.has(c.id)
+        );
         this.cargandoCursos = false;
       },
       error: () => { this.cargandoCursos = false; }
