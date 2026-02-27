@@ -63,7 +63,8 @@ export class LoginComponent {
       this.authService.login(email, password, rememberMe).subscribe({
         next: () => {
           this.isLoading = false;
-          this.router.navigate(['/admin']);
+          const ruta = this.authService.esAdmin() ? '/admin' : '/admin/mis-examenes';
+          this.router.navigate([ruta]);
         },
         error: (error) => {
           this.isLoading = false;

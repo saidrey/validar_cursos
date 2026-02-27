@@ -10,6 +10,11 @@ export const adminGuard: CanActivateFn = () => {
     return true;
   }
 
-  router.navigate(['/']);
+  // Usuario autenticado pero sin rol admin → redirigir a sus exámenes
+  if (authService.estaAutenticado()) {
+    router.navigate(['/admin/mis-examenes']);
+  } else {
+    router.navigate(['/login']);
+  }
   return false;
 };

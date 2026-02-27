@@ -21,6 +21,12 @@ export class AuthService {
       .pipe(
         tap((response: LoginResponse) => {
           if (response.token && response.usuario) {
+            // Limpiar ambos storages para evitar sesiones viejas mezcladas
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('usuario');
+
             const storage = recordarme ? localStorage : sessionStorage;
             storage.setItem('token', response.token);
             storage.setItem('usuario', JSON.stringify(response.usuario));
@@ -56,11 +62,18 @@ export class AuthService {
   }
 
   private cargarUsuarioDesdeStorage(): void {
-    // Primero busca en localStorage (recordarme), luego en sessionStorage
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    const usuarioGuardado = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
-    if (token && usuarioGuardado) {
-      this.usuarioActual.set(JSON.parse(usuarioGuardado));
+    const ssToken = sessionStorage.getItem('token');
+    const ssUsuario = sessionStorage.getItem('usuario');
+    if (ssToken && ssUsuario) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      this.usuarioActual.set(JSON.parse(ssUsuario));
+      return;
+    }
+    const lsToken = localStorage.getItem('token');
+    const lsUsuario = localStorage.getItem('usuario');
+    if (lsToken && lsUsuario) {
+      this.usuarioActual.set(JSON.parse(lsUsuario));
     }
   }
 }

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
-import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
   // Rutas públicas
@@ -8,10 +7,10 @@ export const routes: Routes = [
     path: '',
     loadChildren: () => import('./public/public.routes').then(m => m.PUBLIC_ROUTES)
   },
-  // Rutas privadas (requieren autenticación)
+  // Rutas privadas (acceso por rol se controla en child routes)
   {
     path: 'admin',
-    canActivate: [authGuard, adminGuard],
+    canActivate: [authGuard],
     loadChildren: () => import('./private/private.routes').then(m => m.PRIVATE_ROUTES)
   },
   // Redirección por defecto

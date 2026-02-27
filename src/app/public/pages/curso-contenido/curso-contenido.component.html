@@ -1,0 +1,155 @@
+<app-navbar></app-navbar>
+
+<!-- Loading -->
+<div *ngIf="cargando" class="min-h-screen flex items-center justify-center">
+  <div class="text-center">
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+    <p class="mt-4 text-slate-500">Cargando contenido...</p>
+  </div>
+</div>
+
+<main *ngIf="!cargando && curso" class="min-h-screen bg-slate-50">
+
+  <!-- Hero con imagen -->
+  <section class="relative h-[50vh] w-full overflow-hidden bg-navy-blue">
+    <img [src]="curso.imagen || 'https://via.placeholder.com/1920x1080'"
+         [alt]="curso.nombre"
+         class="absolute inset-0 w-full h-full object-cover opacity-60">
+    <div class="absolute inset-0 bg-gradient-to-t from-navy-blue via-transparent to-navy-blue/30"></div>
+
+    <div class="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-12">
+      <div class="max-w-3xl">
+        <a [routerLink]="['/cursos', curso.id]"
+           class="inline-flex items-center gap-1 text-white/60 hover:text-white text-sm mb-4 transition-colors">
+          <span class="material-symbols-outlined text-base">arrow_back</span>
+          Volver al curso
+        </a>
+
+        <div class="flex items-center gap-2 mb-3">
+          <span class="bg-primary px-3 py-1 rounded text-[10px] font-bold text-white uppercase tracking-widest">Contenido del curso</span>
+        </div>
+
+        <h1 class="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight">{{ curso.nombre }}</h1>
+
+        <div class="flex flex-wrap items-center gap-6 text-white/90">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">schedule</span>
+            <span class="text-sm font-medium">{{ curso.duracion }}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">language</span>
+            <span class="text-sm font-medium">Español</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="max-w-5xl mx-auto px-4 py-10 space-y-12">
+
+    <!-- SECCIÓN VIDEOS -->
+    <section *ngIf="embedUrls.length > 0">
+      <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">play_circle</span>
+        Recursos del curso
+      </h2>
+
+      <!-- Tabs de videos -->
+      <div class="flex gap-2 mb-4" *ngIf="embedUrls.length > 1">
+        <button
+          *ngFor="let u of embedUrls; let i = index"
+          (click)="cambiarVideo(i)"
+          [class.tab-activo]="videoActivo === i"
+          class="tab-video">
+          <span class="material-symbols-outlined text-base">smart_display</span>
+          Recurso {{ i + 1 }}
+        </button>
+      </div>
+
+      <!-- Reproductor -->
+      <div class="video-container">
+        <iframe
+          [src]="embedUrls[videoActivo]"
+          title="Recurso {{ videoActivo + 1 }}"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <!-- Navegación entre videos -->
+      <div class="flex justify-between mt-4" *ngIf="embedUrls.length > 1">
+        <button
+          (click)="cambiarVideo(videoActivo - 1)"
+          [disabled]="videoActivo === 0"
+          class="nav-btn">
+          <span class="material-symbols-outlined">chevron_left</span>
+          Anterior
+        </button>
+        <span class="text-sm text-slate-400 self-center">
+          {{ videoActivo + 1 }} / {{ embedUrls.length }}
+        </span>
+        <button
+          (click)="cambiarVideo(videoActivo + 1)"
+          [disabled]="videoActivo === embedUrls.length - 1"
+          class="nav-btn">
+          Siguiente
+          <span class="material-symbols-outlined">chevron_right</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- SECCIÓN CONTENIDO MARKDOWN -->
+    <section *ngIf="curso.contenido_markdown">
+      <h2 class="text-xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">menu_book</span>
+        Contenido del curso
+      </h2>
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-8 md:p-10 markdown-body"
+           [innerHTML]="curso.contenido_markdown | markdown">
+      </div>
+    </section>
+
+    <!-- Sin contenido aún -->
+    <div *ngIf="!curso.contenido_markdown && embedUrls.length === 0"
+         class="text-center py-20">
+      <span class="material-symbols-outlined text-6xl text-slate-200 mb-4 block">hourglass_empty</span>
+      <p class="text-slate-400 font-medium">El contenido de este curso estará disponible pronto.</p>
+    </div>
+
+    <!-- Botón Presentar Examen -->
+    <div class="flex justify-center pt-4 pb-10">
+      <button (click)="mostrarModalExamen = true" class="btn-examen">
+        <span class="material-symbols-outlined text-xl">quiz</span>
+        Presentar Examen
+      </button>
+    </div>
+
+  </div>
+</main>
+
+<!-- Modal Presentar Examen -->
+<div *ngIf="mostrarModalExamen"
+     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+     (click)="mostrarModalExamen = false">
+  <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full text-center"
+       (click)="$event.stopPropagation()">
+    <span class="material-symbols-outlined text-5xl text-primary mb-4 block">school</span>
+    <h2 class="text-xl font-bold text-slate-800 mb-2">¿Listo para el examen?</h2>
+    <p class="text-slate-500 text-sm mb-6">
+      Para presentar el examen debes iniciar sesión o registrarte en la plataforma.
+    </p>
+    <div class="flex gap-3">
+      <button (click)="mostrarModalExamen = false"
+              class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:border-slate-300 transition-colors">
+        Cancelar
+      </button>
+      <button (click)="irAlLogin()"
+              class="flex-1 py-2.5 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary/90 transition-colors">
+        Iniciar sesión
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-footer *ngIf="!cargando"></app-footer>

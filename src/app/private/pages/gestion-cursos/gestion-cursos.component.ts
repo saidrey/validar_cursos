@@ -153,6 +153,38 @@ export class ConfirmDialogComponent {
           <span class="field-hint">JPG, PNG o WebP · Máx. 5 MB</span>
         </div>
 
+        <!-- Video URL 1 -->
+        <div class="field-group">
+          <label class="field-label">Recurso 1 — URL YouTube</label>
+          <div class="input-with-icon">
+            <span class="material-symbols-outlined input-icon">smart_display</span>
+            <input type="url" formControlName="video_url_1"
+                   placeholder="https://www.youtube.com/watch?v=..."
+                   class="field-input has-icon">
+          </div>
+          <span class="field-hint">Pega el link de YouTube del primer video del curso</span>
+        </div>
+
+        <!-- Video URL 2 -->
+        <div class="field-group">
+          <label class="field-label">Recurso 2 — URL YouTube (opcional)</label>
+          <div class="input-with-icon">
+            <span class="material-symbols-outlined input-icon">smart_display</span>
+            <input type="url" formControlName="video_url_2"
+                   placeholder="https://www.youtube.com/watch?v=..."
+                   class="field-input has-icon">
+          </div>
+        </div>
+
+        <!-- Contenido Markdown -->
+        <div class="field-group">
+          <label class="field-label">Contenido del curso (Markdown)</label>
+          <textarea formControlName="contenido_markdown" rows="8"
+                    placeholder="# Título&#10;## Sección&#10;Escribe aquí el contenido en formato Markdown..."
+                    class="field-input field-textarea" style="font-family: monospace; font-size: 0.8125rem;"></textarea>
+          <span class="field-hint">Soporta: # Títulos, **negrita**, *cursiva*, - listas</span>
+        </div>
+
         <!-- Estado (solo en edición) -->
         @if (data.curso) {
           <div class="toggle-field">
@@ -369,14 +401,17 @@ export class CursoFormDialogComponent {
   previewUrl    = signal<string>(this.data.curso?.imagen ?? '');
 
   form: FormGroup = this.fb.group({
-    nombre:      [this.data.curso?.nombre      ?? '', Validators.required],
-    instructor:  ['N/A'],
-    resumen:     [this.data.curso?.resumen     ?? ''],
-    descripcion: [this.data.curso?.descripcion ?? ''],
-    duracion:    [this.data.curso?.duracion    ?? ''],
-    precio:      [0],
-    imagen:      [this.data.curso?.imagen      ?? ''],
-    activo:      [this.data.curso ? this.data.curso.activo === 1 : true]
+    nombre:               [this.data.curso?.nombre               ?? '', Validators.required],
+    instructor:           ['N/A'],
+    resumen:              [this.data.curso?.resumen              ?? ''],
+    descripcion:          [this.data.curso?.descripcion          ?? ''],
+    duracion:             [this.data.curso?.duracion             ?? ''],
+    precio:               [0],
+    imagen:               [this.data.curso?.imagen               ?? ''],
+    video_url_1:          [this.data.curso?.video_url_1          ?? ''],
+    video_url_2:          [this.data.curso?.video_url_2          ?? ''],
+    contenido_markdown:   [this.data.curso?.contenido_markdown   ?? ''],
+    activo:               [this.data.curso ? this.data.curso.activo === 1 : true]
   });
 
   onFileSelected(event: Event) {

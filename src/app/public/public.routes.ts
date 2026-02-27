@@ -14,6 +14,10 @@ export const PUBLIC_ROUTES: Routes = [
     loadComponent: () => import('./pages/curso-detalle/curso-detalle.component').then(m => m.CursoDetalleComponent)
   },
   {
+    path: 'cursos/:id/contenido',
+    loadComponent: () => import('./pages/curso-contenido/curso-contenido.component').then(m => m.CursoContenidoComponent)
+  },
+  {
     path: 'validar',
     loadComponent: () => import('./pages/validar/validar.component').then(m => m.ValidarComponent)
   },

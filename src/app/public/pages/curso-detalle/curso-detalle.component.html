@@ -135,6 +135,11 @@
       <div class="flex flex-col sm:hidden">
         <span class="text-xl font-extrabold text-navy-blue">${{ curso.precio }}</span>
       </div>
+      <a [routerLink]="['/cursos', curso.id, 'contenido']"
+         class="flex-1 sm:flex-none bg-white hover:bg-slate-50 text-primary border-2 border-primary px-6 py-3.5 rounded-xl font-bold transition-all flex items-center justify-center gap-2">
+        <span class="material-symbols-outlined text-lg">play_circle</span>
+        Iniciar curso
+      </a>
       <button [routerLink]="['/contacto']" [queryParams]="{curso: curso.id}" class="flex-1 sm:flex-none bg-primary hover:bg-navy-blue text-white px-8 py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-primary/30 flex items-center justify-center gap-2">
         Inscribirse ahora
         <span class="material-symbols-outlined text-lg">arrow_forward</span>

@@ -2,7 +2,8 @@ import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   // Obtener token del localStorage o sessionStorage (según si marcó "Recordarme")
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  // sessionStorage tiene prioridad (sesión activa sin "recuérdame")
+  const token = sessionStorage.getItem('token') || localStorage.getItem('token');
   
   // Si existe token, agregarlo a los headers
   if (token) {

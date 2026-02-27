@@ -65,7 +65,7 @@
         </div>
         <div class="user-info">
           <span class="user-name">{{ usuario?.nombre }}</span>
-          <span class="user-role">Administrador</span>
+          <span class="user-role">{{ esAdmin ? 'Administrador' : 'Estudiante' }}</span>
         </div>
         <span class="material-symbols-outlined chevron">expand_more</span>
       </div>

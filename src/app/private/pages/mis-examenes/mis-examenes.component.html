@@ -1,0 +1,50 @@
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Mis Exámenes</h1>
+      <p class="page-subtitle">Historial de exámenes presentados</p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="cargando" class="loading-state">
+    <div class="spinner"></div>
+    <p>Cargando exámenes...</p>
+  </div>
+
+  <!-- Sin exámenes -->
+  <div *ngIf="!cargando && examenes.length === 0" class="empty-state">
+    <span class="material-symbols-outlined empty-icon">quiz</span>
+    <h3>Aún no has presentado exámenes</h3>
+    <p>Cuando presentes un examen, aparecerá aquí con tu nota y la fecha.</p>
+  </div>
+
+  <!-- Tabla -->
+  <div *ngIf="!cargando && examenes.length > 0" class="table-card">
+    <table class="exam-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Curso</th>
+          <th>Nota</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let examen of examenes; let i = index">
+          <td class="col-num">{{ i + 1 }}</td>
+          <td class="col-curso">{{ examen.curso_nombre }}</td>
+          <td class="col-nota">
+            <span class="nota-badge" [ngClass]="getNotaClase(examen.nota)">
+              {{ examen.nota | number:'1.1-1' }}
+            </span>
+          </td>
+          <td class="col-fecha">{{ examen.fecha_presentacion | date:'dd/MM/yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

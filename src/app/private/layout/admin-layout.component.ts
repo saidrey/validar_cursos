@@ -35,13 +35,26 @@ export class AdminLayoutComponent {
   isMobile = signal(window.innerWidth < 768);
   usuario = this.authService.obtenerUsuario();
 
-  navItems: NavItem[] = [
+  get esAdmin(): boolean {
+    return this.authService.esAdmin();
+  }
+
+  private navItemsAdmin: NavItem[] = [
     { path: '/admin', label: 'Dashboard', icon: 'dashboard' },
     { path: '/admin/cursos', label: 'Cursos', icon: 'school' },
     { path: '/admin/diplomas', label: 'Diplomas', icon: 'card_membership' },
     { path: '/admin/usuarios', label: 'Personas', icon: 'people' },
     { path: '/admin/correos', label: 'Mensajes', icon: 'mail' },
+    { path: '/admin/mis-examenes', label: 'Mis Exámenes', icon: 'quiz' },
   ];
+
+  private navItemsUsuario: NavItem[] = [
+    { path: '/admin/mis-examenes', label: 'Mis Exámenes', icon: 'quiz' },
+  ];
+
+  get navItems(): NavItem[] {
+    return this.esAdmin ? this.navItemsAdmin : this.navItemsUsuario;
+  }
 
   toggleSidebar() {
     this.sidebarOpen.update(v => !v);
