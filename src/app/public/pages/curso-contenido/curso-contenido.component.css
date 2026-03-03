@@ -147,3 +147,8 @@
   font-size: 0.85em;
   font-family: monospace;
 }
+
+.markdown-body p {
+  text-align: justify;
+  text-justify: inter-word;
+}
