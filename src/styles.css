@@ -27,3 +27,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 /* ── Snackbar admin ───────────────────────────────────────────── */
 .snack-success .mdc-snackbar__surface { background: #16a34a !important; }
 .snack-error   .mdc-snackbar__surface { background: #dc2626 !important; }
+
+
+.markdown-body p {
+  text-align: justify;
+  text-justify: inter-word;
+}
