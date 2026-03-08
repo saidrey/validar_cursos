@@ -6,6 +6,7 @@ import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { ContactoService } from '../../../core/services/contacto.service';
 import { CursosService } from '../../../core/services/cursos.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { Curso } from '../../../core/models/curso.model';
 
 @Component({
@@ -20,6 +21,7 @@ export class ContactoComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private contactoService = inject(ContactoService);
   private cursosService = inject(CursosService);
+  private seo = inject(SeoService);
 
   contactoForm!: FormGroup;
   cursos: Curso[] = [];
@@ -28,6 +30,22 @@ export class ContactoComponent implements OnInit {
   mensajeError = '';
 
   ngOnInit() {
+    // Página de formulario estático — los meta tags no cambian con los datos.
+    // ContactPage en JSON-LD informa a Google que esta página es el punto
+    // de contacto oficial, lo que puede mejorar el panel de conocimiento del sitio.
+    this.seo.setPage({
+      title: 'Contacto',
+      description: 'Solicita información sobre nuestros cursos certificados. Completa el formulario y nos pondremos en contacto contigo.',
+      keywords: 'contacto, solicitar información, cursos, inscripción'
+    });
+
+    this.seo.setJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'ContactPage',
+      'name': 'Contacto — Aula Virtual',
+      'description': 'Formulario de contacto para solicitar información sobre cursos certificados.'
+    });
+
     this.inicializarFormulario();
     this.cargarCursos();
     
@@ -72,12 +90,12 @@ export class ContactoComponent implements OnInit {
     this.mensajeError = '';
 
     this.contactoService.enviarSolicitud(this.contactoForm.value).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.mensajeExito = 'Gracias por tu interés. Pronto recibirás un correo con la información del curso seleccionado.';
         this.contactoForm.reset();
         this.enviando = false;
       },
-      error: (error) => {
+      error: (_error) => {
         this.mensajeError = 'Hubo un error al enviar tu solicitud. Por favor, intenta nuevamente.';
         this.enviando = false;
       }

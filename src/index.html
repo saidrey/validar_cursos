@@ -6,6 +6,26 @@
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Meta tags base — SeoService los sobreescribe por ruta en cada componente.
+       Estos actúan como fallback y como valores iniciales en el primer render SSR
+       antes de que Angular ejecute ngOnInit de cada componente. -->
+  <meta name="description" content="Plataforma de formación certificada en gestión pública, derecho, liderazgo y administración organizacional.">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph: protocolo para previews de links en WhatsApp, LinkedIn, Slack, etc. -->
+  <meta property="og:type"        content="website">
+  <meta property="og:site_name"   content="Aula Virtual">
+  <meta property="og:title"       content="Aula Virtual">
+  <meta property="og:description" content="Plataforma de formación certificada en gestión pública, derecho, liderazgo y administración organizacional.">
+  <meta property="og:image"       content="/og-default.jpg">
+
+  <!-- Twitter Card: sistema propio de Twitter/X, no lee OG directamente -->
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Aula Virtual">
+  <meta name="twitter:description" content="Plataforma de formación certificada en gestión pública, derecho, liderazgo y administración organizacional.">
+  <meta name="twitter:image"       content="/og-default.jpg">
+
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>

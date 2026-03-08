@@ -5,8 +5,10 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CursosService } from '../../../core/services/cursos.service';
+import { SeoService } from '../../../core/services/seo.service';
 import { Curso } from '../../../core/models/curso.model';
 import { MarkdownPipe } from '../../../shared/markdown.pipe';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-curso-contenido',
@@ -20,6 +22,7 @@ export class CursoContenidoComponent implements OnInit {
   private router = inject(Router);
   private cursosService = inject(CursosService);
   private sanitizer = inject(DomSanitizer);
+  private seo = inject(SeoService);
 
   curso: Curso | null = null;
   cargando = true;
@@ -39,6 +42,17 @@ export class CursoContenidoComponent implements OnInit {
             .filter(embed => embed !== '')
             .map(embed => this.sanitizer.bypassSecurityTrustResourceUrl(embed));
           this.cargando = false;
+
+          // URL canónica apunta al detalle (/cursos/:id), no al contenido.
+          // Así Google consolida el ranking en la página de venta del curso,
+          // no en la de contenido que está detrás de autenticación parcial.
+          this.seo.setPage({
+            title: `${data.nombre} — Contenido`,
+            description: `Accede al contenido completo de "${data.nombre}". Videos, material y examen del curso impartido por ${data.instructor}.`,
+            image: data.imagen || undefined,
+            url: `${environment.siteUrl}/cursos/${data.id}`,
+            type: 'article'
+          });
         },
         error: () => {
           this.cargando = false;

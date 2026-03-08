@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-login',
@@ -10,9 +11,21 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  private seo = inject(SeoService);
   loginForm: FormGroup;
   registroForm: FormGroup;
+
+  ngOnInit(): void {
+    // noindex: true → Google no debe indexar el login.
+    // Es una página funcional, no de contenido. Si aparece en buscadores
+    // ocupa crawl budget y puede confundir al usuario que busca el sitio.
+    this.seo.setPage({
+      title: 'Iniciar Sesión',
+      description: 'Accede a tu cuenta en Aula Virtual.',
+      noindex: true
+    });
+  }
 
   modoRegistro = false;
   mostrarModalPassword = false;
