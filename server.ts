@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { CommonEngine } from '@angular/ssr/node';
+import { CommonEngine } from '@angular/ssr';
 import express from 'express';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve } from 'node:path';
@@ -29,8 +29,10 @@ export function app(): express.Express {
   }));
 
   // Cualquier ruta que no sea un archivo estático pasa por el motor Angular.
-  // El CommonEngine determina si renderiza en servidor o devuelve el shell CSR
-  // según lo configurado en app.routes.server.ts.
+  // El CommonEngine renderiza cada ruta en el servidor (SSR on-demand).
+  // En Angular 18 no hay configuración de RenderMode por ruta: todas las rutas
+  // pasan por el servidor. Las rutas privadas (/admin) siguen protegidas por
+  // authGuard en el cliente tras la hidratación.
   server.get('**', (req, res, next) => {
     const { protocol, originalUrl, baseUrl, headers } = req;
 
