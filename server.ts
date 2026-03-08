@@ -1,3 +1,6 @@
+// Debe ser el primer import: aplica shims de domino (document, window, etc.)
+// en globalThis para que el código que accede a globals del browser no falle en Node.js.
+import '@angular/platform-server/init';
 import { APP_BASE_HREF } from '@angular/common';
 import { CommonEngine } from '@angular/ssr';
 import express from 'express';
