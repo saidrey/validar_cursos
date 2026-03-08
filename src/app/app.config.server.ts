@@ -1,18 +1,20 @@
 import { mergeApplicationConfig, ApplicationConfig } from '@angular/core';
+import { provideServerRendering } from '@angular/platform-server';
 
 import { appConfig } from './app.config';
 
 // Config exclusiva del servidor: se fusiona con appConfig (no lo reemplaza).
-// En Angular 18 el motor SSR (CommonEngine) lo activa el builder automáticamente.
-// No se necesitan providers adicionales aquí: el punto de entrada server.ts y
-// el angular.json (server + ssr.entry) son suficientes para que el builder
-// genere el bundle de servidor.
+// provideServerRendering() viene de '@angular/platform-server' (no de '@angular/ssr').
+// Es el que activa el platform-server de Angular en lugar del platform-browser,
+// reemplazando las implementaciones de DOCUMENT, DomAdapter, etc.
+// Sin esto, Node.js intenta usar APIs del browser (document, window) y crashea.
 //
-// Nota Angular 19+: esa versión introduce provideServerRendering() y
-// provideServerRoutesConfig() desde '@angular/ssr', junto con RenderMode
-// por ruta. En v18 esas APIs no existen todavía.
+// Nota Angular 19+: esa versión mueve este provider a '@angular/ssr' directamente
+// y agrega provideServerRoutesConfig() para control de RenderMode por ruta.
 const serverConfig: ApplicationConfig = {
-  providers: []
+  providers: [
+    provideServerRendering()
+  ]
 };
 
 export const config = mergeApplicationConfig(appConfig, serverConfig);
