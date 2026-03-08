@@ -315,7 +315,7 @@ shadow-primary/20   /* Sombra con color primary al 20% */
       <div class="flex flex-col sm:flex-row gap-4 pt-4">
         <a routerLink="/cursos"
            class="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-xl font-bold text-base transition-all text-center">
-          Explorar Catálogo
+          Cursos ofertados
         </a>
         <a routerLink="/validar"
            class="bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-base transition-all text-center">
