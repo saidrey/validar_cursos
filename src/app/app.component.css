@@ -1,3 +1,25 @@
+/* ── Skip link (accesibilidad) ─────────────────────────────── */
+/* Visualmente oculto excepto cuando recibe foco de teclado (WCAG 2.4.1) */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.75rem 1.25rem;
+  background: #137fec;
+  color: white;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
 .whatsapp-fab {
   position: fixed;
   bottom: 28px;

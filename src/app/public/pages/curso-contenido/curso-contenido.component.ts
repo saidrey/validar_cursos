@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { A11yModule } from '@angular/cdk/a11y';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CursosService } from '../../../core/services/cursos.service';
@@ -11,7 +12,7 @@ import { MarkdownPipe } from '../../../shared/markdown.pipe';
 @Component({
   selector: 'app-curso-contenido',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavbarComponent, FooterComponent, MarkdownPipe],
+  imports: [CommonModule, RouterLink, A11yModule, NavbarComponent, FooterComponent, MarkdownPipe],
   templateUrl: './curso-contenido.component.html',
   styleUrl: './curso-contenido.component.css'
 })

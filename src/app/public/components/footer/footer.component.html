@@ -38,54 +38,79 @@
       <div class="lg:col-span-6 space-y-6">
         <h5 class="text-white font-bold text-base">Contáctanos</h5>
 
+        <!-- role="status"/"alert" para anunciar el resultado al enviar el formulario del footer -->
         @if (enviado) {
-          <div class="bg-emerald-900/40 border border-emerald-700 rounded-lg px-4 py-3 flex items-center gap-3 text-emerald-400 text-sm">
-            <span class="material-symbols-outlined text-lg">check_circle</span>
+          <div role="status" aria-live="polite"
+               class="bg-emerald-900/40 border border-emerald-700 rounded-lg px-4 py-3 flex items-center gap-3 text-emerald-400 text-sm">
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">check_circle</span>
             <span>¡Mensaje enviado! Te responderemos pronto.</span>
           </div>
         }
 
         @if (error) {
-          <div class="bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 flex items-center gap-3 text-red-400 text-sm">
-            <span class="material-symbols-outlined text-lg">error</span>
+          <div role="alert"
+               class="bg-red-900/40 border border-red-700 rounded-lg px-4 py-3 flex items-center gap-3 text-red-400 text-sm">
+            <span class="material-symbols-outlined text-lg" aria-hidden="true">error</span>
             <span>Error al enviar. Intenta de nuevo.</span>
           </div>
         }
 
-        <form class="space-y-4" (ngSubmit)="onSubmit()" #contactForm="ngForm">
+        <!-- Las clases sr-only ocultan visualmente las etiquetas pero las mantienen disponibles
+             para lectores de pantalla. Los placeholders NO son sustituto de labels (WCAG 1.3.1) -->
+        <form class="space-y-4" (ngSubmit)="onSubmit()" #contactForm="ngForm" aria-label="Formulario de contacto rápido">
           <!-- Fila 1: Nombre y Teléfono -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="nombre"
-              [(ngModel)]="formData.nombre"
-              placeholder="Tu Nombre"
-              required
-              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
-            <input
-              type="tel"
-              name="telefono"
-              [(ngModel)]="formData.telefono"
-              placeholder="Tu Teléfono"
-              required
-              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
+            <div>
+              <label for="footer-nombre" class="sr-only">Tu nombre completo</label>
+              <input
+                type="text"
+                id="footer-nombre"
+                name="nombre"
+                [(ngModel)]="formData.nombre"
+                placeholder="Tu Nombre"
+                required
+                aria-required="true"
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
+            </div>
+            <div>
+              <label for="footer-telefono" class="sr-only">Tu número de teléfono</label>
+              <input
+                type="tel"
+                id="footer-telefono"
+                name="telefono"
+                [(ngModel)]="formData.telefono"
+                placeholder="Tu Teléfono"
+                required
+                aria-required="true"
+                class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
+            </div>
           </div>
           <!-- Fila 2: Email -->
-          <input
-            type="email"
-            name="email"
-            [(ngModel)]="formData.email"
-            placeholder="Tu Email"
-            required
-            class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
+          <div>
+            <label for="footer-email" class="sr-only">Tu correo electrónico</label>
+            <input
+              type="email"
+              id="footer-email"
+              name="email"
+              [(ngModel)]="formData.email"
+              placeholder="Tu Email"
+              required
+              aria-required="true"
+              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500">
+          </div>
           <!-- Fila 3: Mensaje -->
-          <textarea
-            name="mensaje"
-            [(ngModel)]="formData.mensaje"
-            placeholder="Tu Mensaje"
-            rows="4"
-            required
-            class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500"></textarea>
+          <div>
+            <label for="footer-mensaje" class="sr-only">Tu mensaje</label>
+            <textarea
+              id="footer-mensaje"
+              name="mensaje"
+              [(ngModel)]="formData.mensaje"
+              placeholder="Tu Mensaje"
+              rows="4"
+              required
+              aria-required="true"
+              class="w-full bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-white placeholder-slate-500"></textarea>
+          </div>
           <button
             type="submit"
             [disabled]="!contactForm.valid || isLoading"

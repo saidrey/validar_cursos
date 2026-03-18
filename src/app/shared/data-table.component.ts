@@ -30,20 +30,24 @@ export interface TableColumn {
     <div class="data-table-container">
 
       <!-- Búsqueda -->
-      <div class="search-wrapper">
-        <span class="material-symbols-outlined search-icon">search</span>
+      <!-- role="search" define la región como una función de búsqueda para lectores de pantalla -->
+      <div class="search-wrapper" role="search">
+        <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+        <label for="table-search" class="sr-only">Buscar en la tabla</label>
         <input
-          type="text"
+          type="search"
+          id="table-search"
           [(ngModel)]="searchTerm"
           (keyup.enter)="onSearch()"
           placeholder="Buscar..."
+          aria-label="Buscar en la tabla"
           class="search-input">
         @if (searchTerm) {
-          <button class="search-clear" (click)="searchTerm = ''; onSearch()" title="Limpiar">
-            <span class="material-symbols-outlined">close</span>
+          <button type="button" class="search-clear" (click)="searchTerm = ''; onSearch()" aria-label="Limpiar búsqueda">
+            <span class="material-symbols-outlined" aria-hidden="true">close</span>
           </button>
         }
-        <button class="search-btn" (click)="onSearch()">Buscar</button>
+        <button type="button" class="search-btn" (click)="onSearch()">Buscar</button>
       </div>
 
       <!-- Tabla -->
@@ -65,25 +69,33 @@ export interface TableColumn {
           </ng-container>
 
           <!-- Columna de acciones -->
+          <!-- aria-label en cada botón: el ícono Material no tiene texto visible,
+               aria-label provee el nombre accesible para lectores de pantalla (WCAG 4.1.2) -->
           <ng-container matColumnDef="actions" *ngIf="hasActions">
             <th mat-header-cell *matHeaderCellDef class="actions-header">Acciones</th>
             <td mat-cell *matCellDef="let row" class="actions-cell">
               @if (hasPrint) {
-                <button class="action-btn print-btn"
+                <button type="button"
+                        class="action-btn print-btn"
                         (click)="printItem.emit(row)"
+                        aria-label="Imprimir diploma"
                         matTooltip="Imprimir diploma">
-                  <span class="material-symbols-outlined">print</span>
+                  <span class="material-symbols-outlined" aria-hidden="true">print</span>
                 </button>
               }
-              <button class="action-btn edit-btn"
+              <button type="button"
+                      class="action-btn edit-btn"
                       (click)="editItem.emit(row)"
+                      aria-label="Editar registro"
                       matTooltip="Editar">
-                <span class="material-symbols-outlined">edit</span>
+                <span class="material-symbols-outlined" aria-hidden="true">edit</span>
               </button>
-              <button class="action-btn delete-btn"
+              <button type="button"
+                      class="action-btn delete-btn"
                       (click)="deleteItem.emit(row)"
+                      aria-label="Eliminar registro"
                       matTooltip="Eliminar">
-                <span class="material-symbols-outlined">delete</span>
+                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
               </button>
             </td>
           </ng-container>

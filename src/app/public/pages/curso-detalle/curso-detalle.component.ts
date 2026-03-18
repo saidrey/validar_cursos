@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { A11yModule } from '@angular/cdk/a11y';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CursosService } from '../../../core/services/cursos.service';
@@ -9,7 +10,7 @@ import { Curso } from '../../../core/models/curso.model';
 @Component({
   selector: 'app-curso-detalle',
   standalone: true,
-  imports: [CommonModule, RouterLink, NavbarComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, A11yModule, NavbarComponent, FooterComponent],
   templateUrl: './curso-detalle.component.html',
   styleUrl: './curso-detalle.component.css'
 })

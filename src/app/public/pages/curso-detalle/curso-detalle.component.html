@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<main *ngIf="!cargando && curso">
+<main id="contenido-principal" *ngIf="!cargando && curso">
   <!-- Hero Section con Imagen de Fondo -->
   <section class="relative h-[70vh] w-full overflow-hidden bg-navy-blue">
     <img [src]="curso.imagen || 'https://via.placeholder.com/1920x1080'" 
@@ -186,19 +186,29 @@
 </div>
 
 <!-- Modal: Inscripción gratuita + Certificado -->
+<!-- role="dialog" + aria-modal="true": el lector de pantalla sabe que es un diálogo modal -->
+<!-- aria-labelledby apunta al h2 del modal, que se convierte en el nombre del diálogo -->
+<!-- cdkTrapFocus: directiva del Angular CDK que atrapa el foco dentro del modal -->
 @if (mostrarModal) {
-  <div class="modal-overlay" (click)="cerrarModal()">
-    <div class="modal-card" (click)="$event.stopPropagation()">
-      <button class="modal-close" (click)="cerrarModal()" aria-label="Cerrar">
-        <span class="material-symbols-outlined">close</span>
+  <div class="modal-overlay" role="presentation" (click)="cerrarModal()">
+    <div class="modal-card"
+         role="dialog"
+         aria-modal="true"
+         aria-labelledby="modal-titulo-gratis"
+         cdkTrapFocus
+         cdkTrapFocusAutoCapture="true"
+         (click)="$event.stopPropagation()"
+         (keydown.escape)="cerrarModal()">
+      <button class="modal-close" type="button" (click)="cerrarModal()" aria-label="Cerrar diálogo">
+        <span class="material-symbols-outlined" aria-hidden="true">close</span>
       </button>
 
-      <div class="modal-gratis-banner">
+      <div class="modal-gratis-banner" aria-hidden="true">
         <span class="material-symbols-outlined modal-gratis-icon">celebration</span>
         <span class="modal-gratis-text">100% GRATIS</span>
       </div>
 
-      <h2 class="modal-titulo">¡Aprende sin costo!</h2>
+      <h2 id="modal-titulo-gratis" class="modal-titulo">¡Aprende sin costo!</h2>
       <p class="modal-subtitulo">{{ curso?.nombre }}</p>
 
       <p class="modal-desc">

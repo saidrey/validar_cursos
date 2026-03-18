@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<main class="flex-grow">
+<main id="contenido-principal" class="flex-grow">
   <!-- Hero Section -->
   <section class="bg-slate-950 py-16 text-center">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -36,6 +36,7 @@
               <select
                 id="tipoDocumento"
                 formControlName="tipoDocumento"
+                aria-required="true"
                 class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-slate-900">
                 <option value="CC">Cédula de Ciudadanía</option>
                 <option value="TI">Tarjeta de Identidad</option>
@@ -55,6 +56,9 @@
                 id="documento"
                 formControlName="documento"
                 placeholder="Ej: 1012345678"
+                aria-required="true"
+                aria-describedby="documento-error"
+                [attr.aria-invalid]="validacionForm.get('documento')?.invalid && validacionForm.get('documento')?.touched ? 'true' : null"
                 class="w-full bg-slate-50 border border-slate-200 rounded-lg px-4 py-3 text-sm focus:ring-primary focus:border-primary text-slate-900 placeholder-slate-400">
             </div>
           </div>
@@ -73,8 +77,9 @@
           </button>
 
           <!-- Resultado de Validación -->
+          <!-- role="status" + aria-live="polite": anuncia el resultado al lector de pantalla cuando aparece -->
           @if (resultado) {
-            <div class="mt-8">
+            <div class="mt-8" role="status" aria-live="polite" aria-atomic="true">
               @if (resultado.valido) {
                 <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-6 flex items-start gap-4">
                   <div class="bg-emerald-500 text-white rounded-full p-1 flex-shrink-0">
