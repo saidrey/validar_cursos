@@ -136,8 +136,8 @@
 
     <!-- Botón Presentar Examen -->
     <div class="flex justify-center pt-4 pb-10">
-      <button (click)="mostrarModalExamen = true" class="btn-examen">
-        <span class="material-symbols-outlined text-xl">quiz</span>
+      <button type="button" (click)="abrirModalExamen()" class="btn-examen">
+        <span class="material-symbols-outlined text-xl" aria-hidden="true">quiz</span>
         Presentar Examen
       </button>
     </div>
@@ -151,7 +151,7 @@
 <div *ngIf="mostrarModalExamen"
      role="presentation"
      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-     (click)="mostrarModalExamen = false">
+     (click)="cerrarModalExamen()">
   <div class="bg-white rounded-2xl shadow-xl p-8 max-w-sm w-full text-center"
        role="dialog"
        aria-modal="true"
@@ -159,7 +159,7 @@
        cdkTrapFocus
        cdkTrapFocusAutoCapture="true"
        (click)="$event.stopPropagation()"
-       (keydown.escape)="mostrarModalExamen = false">
+       (keydown.escape)="cerrarModalExamen()">
     <span class="material-symbols-outlined text-5xl text-primary mb-4 block" aria-hidden="true">school</span>
     <h2 id="modal-examen-titulo" class="text-xl font-bold text-slate-800 mb-2">¿Listo para el examen?</h2>
     <p class="text-slate-500 text-sm mb-6">
@@ -167,7 +167,7 @@
     </p>
     <div class="flex gap-3">
       <button type="button"
-              (click)="mostrarModalExamen = false"
+              (click)="cerrarModalExamen()"
               class="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-semibold hover:border-slate-300 transition-colors">
         Cancelar
       </button>

@@ -24,6 +24,10 @@ export class CursoDetalleComponent implements OnInit {
   resumenItems: string[] = [];
   mostrarModal = false;
 
+  // Guarda el elemento que tenía el foco antes de abrir el modal
+  // para devolverlo al cerrar (patrón ARIA Dialog obligatorio, WCAG 2.4.3)
+  private modalTrigger: HTMLElement | null = null;
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -46,8 +50,20 @@ export class CursoDetalleComponent implements OnInit {
     });
   }
 
-  abrirModal() { this.mostrarModal = true; }
-  cerrarModal() { this.mostrarModal = false; }
+  abrirModal() {
+    // Captura el elemento activo ANTES de abrir el modal.
+    // document.activeElement es el botón que el usuario presionó.
+    this.modalTrigger = document.activeElement as HTMLElement;
+    this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+    // setTimeout(0) espera un tick para que Angular elimine el modal del DOM
+    // antes de devolver el foco. Sin el setTimeout, el elemento al que
+    // queremos hacer focus puede estar oculto/destruido todavía.
+    setTimeout(() => this.modalTrigger?.focus(), 0);
+  }
 
   parsearResumen(resumen: string): string[] {
     if (!resumen) return [];

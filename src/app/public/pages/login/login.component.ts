@@ -21,6 +21,8 @@ export class LoginComponent {
   errorMessage = '';
   successMessage = '';
 
+  private modalTrigger: HTMLElement | null = null;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -44,6 +46,16 @@ export class LoginComponent {
     const pass = group.get('password')?.value;
     const confirm = group.get('confirmarPassword')?.value;
     return pass === confirm ? null : { noCoinciden: true };
+  }
+
+  abrirModalPassword() {
+    this.modalTrigger = document.activeElement as HTMLElement;
+    this.mostrarModalPassword = true;
+  }
+
+  cerrarModalPassword() {
+    this.mostrarModalPassword = false;
+    setTimeout(() => this.modalTrigger?.focus(), 0);
   }
 
   toggleModo() {

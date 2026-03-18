@@ -81,7 +81,7 @@
                   <label for="password" class="block text-sm font-semibold text-slate-700">
                     Contraseña
                   </label>
-                  <button type="button" (click)="mostrarModalPassword = true" class="text-xs text-primary hover:underline font-medium">
+                  <button type="button" (click)="abrirModalPassword()" class="text-xs text-primary hover:underline font-medium">
                     ¿Olvidaste tu contraseña?
                   </button>
                 </div>
@@ -289,7 +289,7 @@
   @if (mostrarModalPassword) {
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4" role="presentation">
       <!-- Overlay -->
-      <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" (click)="mostrarModalPassword = false"></div>
+      <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" (click)="cerrarModalPassword()"></div>
 
       <!-- Modal: role="dialog" + aria-modal + aria-labelledby + cdkTrapFocus -->
       <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 text-center"
@@ -298,7 +298,7 @@
            aria-labelledby="modal-password-titulo"
            cdkTrapFocus
            cdkTrapFocusAutoCapture="true"
-           (keydown.escape)="mostrarModalPassword = false">
+           (keydown.escape)="cerrarModalPassword()">
         <!-- Icono -->
         <div class="inline-flex items-center justify-center w-14 h-14 bg-amber-100 rounded-2xl text-amber-600 mb-5" aria-hidden="true">
           <span class="material-symbols-outlined text-3xl">lock_open</span>
@@ -343,7 +343,7 @@
 
         <button
           type="button"
-          (click)="mostrarModalPassword = false"
+          (click)="cerrarModalPassword()"
           class="w-full py-3 rounded-xl border border-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-50 transition-colors">
           Cerrar
         </button>

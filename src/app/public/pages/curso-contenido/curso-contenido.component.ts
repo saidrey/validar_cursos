@@ -28,6 +28,8 @@ export class CursoContenidoComponent implements OnInit {
   embedUrls: SafeResourceUrl[] = [];
   mostrarModalExamen = false;
 
+  private modalTrigger: HTMLElement | null = null;
+
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -47,6 +49,16 @@ export class CursoContenidoComponent implements OnInit {
         }
       });
     }
+  }
+
+  abrirModalExamen() {
+    this.modalTrigger = document.activeElement as HTMLElement;
+    this.mostrarModalExamen = true;
+  }
+
+  cerrarModalExamen() {
+    this.mostrarModalExamen = false;
+    setTimeout(() => this.modalTrigger?.focus(), 0);
   }
 
   cambiarVideo(index: number) {

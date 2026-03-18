@@ -28,6 +28,47 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .snack-success .mdc-snackbar__surface { background: #16a34a !important; }
 .snack-error   .mdc-snackbar__surface { background: #dc2626 !important; }
 
+/* ── Accesibilidad: indicador de foco visible (WCAG 2.4.7) ───── */
+/*
+ * :focus-visible aplica SOLO cuando el usuario navega con teclado,
+ * no cuando hace clic con mouse. Esto soluciona el problema de
+ * "el outline es feo cuando hago clic" sin sacrificar la accesibilidad.
+ *
+ * Importante: NUNCA usar `outline: none` sin proveer un reemplazo.
+ * Un usuario de teclado sin indicador de foco está completamente perdido.
+ */
+
+/* Resetea el outline del browser para reemplazarlo con uno consistente */
+*:focus {
+  outline: none;
+}
+
+/* Estilo de foco para navegación por teclado — visible y claro */
+*:focus-visible {
+  outline: 3px solid #137fec;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Variante de alto contraste para elementos sobre fondos oscuros
+   (modales sobre overlay, botones en el navbar de fondo oscuro, footer) */
+.modal-card *:focus-visible,
+.modal-overlay *:focus-visible,
+footer *:focus-visible,
+.bg-navy-blue *:focus-visible,
+.bg-slate-950 *:focus-visible {
+  outline-color: #ffffff;
+  outline-offset: 3px;
+}
+
+/* Angular Material ya gestiona su propio foco — lo dejamos intacto */
+.mat-mdc-button:focus-visible,
+.mat-mdc-icon-button:focus-visible,
+.mat-mdc-outlined-button:focus-visible {
+  outline: 3px solid #137fec;
+  outline-offset: 3px;
+}
+
 
 .markdown-body p {
   text-align: justify;
