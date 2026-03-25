@@ -1,5 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ThemeService } from '../../../core/services/theme.service';
+import { FontSizeService } from '../../../core/services/font-size.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,6 +12,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class NavbarComponent {
   menuOpen = signal(false);
+  themeService = inject(ThemeService);
+  fontSizeService = inject(FontSizeService);
 
   toggleMenu() {
     this.menuOpen.update(v => !v);

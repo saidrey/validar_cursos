@@ -28,15 +28,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .snack-success .mdc-snackbar__surface { background: #16a34a !important; }
 .snack-error   .mdc-snackbar__surface { background: #dc2626 !important; }
 
-/* ── Accesibilidad: indicador de foco visible (WCAG 2.4.7) ───── */
-/*
- * :focus-visible aplica SOLO cuando el usuario navega con teclado,
- * no cuando hace clic con mouse. Esto soluciona el problema de
- * "el outline es feo cuando hago clic" sin sacrificar la accesibilidad.
- *
- * Importante: NUNCA usar `outline: none` sin proveer un reemplazo.
- * Un usuario de teclado sin indicador de foco está completamente perdido.
- */
 
 /* Resetea el outline del browser para reemplazarlo con uno consistente */
 *:focus {
@@ -74,3 +65,66 @@ footer *:focus-visible,
   text-align: justify;
   text-justify: inter-word;
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   DARK MODE — Zona pública
+   ══════════════════════════════════════════════════════════════════
+
+/* ── Transición suave al cambiar tema ────────────────────────── */
+*, *::before, *::after {
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+}
+/* Excepciones: elementos que no deben transicionar (evita flicker en SVG e imágenes) */
+img, svg, video { transition: none; }
+
+/* ── Fondos ───────────────────────────────────────────────────── */
+.dark .bg-white          { background-color: #1e293b; }
+.dark .bg-white\/90      { background-color: rgb(15 23 42 / 0.92) !important; }
+.dark .bg-white\/95      { background-color: rgb(15 23 42 / 0.96) !important; }
+.dark .bg-slate-50       { background-color: #0f172a; }
+.dark .bg-slate-100      { background-color: #1e293b; }
+.dark .bg-slate-200      { background-color: #334155; }
+.dark .bg-slate-900      { background-color: #020617; }
+.dark .bg-slate-950      { background-color: #020617; }
+.dark .bg-blue-50        { background-color: #0f2744; }
+.dark .bg-red-50         { background-color: #3b0f0f; }
+.dark .bg-green-50       { background-color: #0f2b1a; }
+.dark .bg-emerald-50     { background-color: #0f2b1a; }
+.dark .bg-amber-50       { background-color: #2b1f0f; }
+
+/* ── Textos ───────────────────────────────────────────────────── */
+.dark .text-slate-900    { color: #f1f5f9; }
+.dark .text-slate-800    { color: #e2e8f0; }
+.dark .text-slate-700    { color: #cbd5e1; }
+.dark .text-slate-600    { color: #94a3b8; }
+.dark .text-slate-500    { color: #64748b; }
+.dark .text-slate-400    { color: #475569; }
+.dark .text-navy-blue    { color: #93c5fd; }
+
+/* ── Bordes ───────────────────────────────────────────────────── */
+.dark .border-slate-100  { border-color: #1e293b; }
+.dark .border-slate-200  { border-color: #334155; }
+.dark .border-slate-300  { border-color: #475569; }
+.dark .border-slate-800  { border-color: #0f172a; }
+.dark .border-red-200    { border-color: #7f1d1d; }
+.dark .border-green-200  { border-color: #14532d; }
+.dark .border-emerald-200 { border-color: #14532d; }
+
+/* ── Hover states ─────────────────────────────────────────────── */
+.dark .hover\:bg-slate-50:hover   { background-color: #1e293b; }
+.dark .hover\:bg-slate-100:hover  { background-color: #334155; }
+.dark .hover\:bg-white:hover      { background-color: #334155; }
+
+/* ── Inputs y formularios ─────────────────────────────────────── */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #1e293b;
+  color: #f1f5f9;
+  border-color: #334155;
+}
+.dark input::placeholder,
+.dark textarea::placeholder { color: #64748b; }
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus { border-color: #137fec; }
