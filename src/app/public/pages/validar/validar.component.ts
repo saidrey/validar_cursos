@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { DiplomasService } from '../../../core/services/diplomas.service';
+import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-validar',
@@ -12,7 +13,8 @@ import { DiplomasService } from '../../../core/services/diplomas.service';
   templateUrl: './validar.component.html',
   styleUrl: './validar.component.css'
 })
-export class ValidarComponent {
+export class ValidarComponent implements OnInit {
+  private seo = inject(SeoService);
   validacionForm: FormGroup;
   isLoading = false;
   resultado: any = null;
@@ -24,6 +26,16 @@ export class ValidarComponent {
     this.validacionForm = this.fb.group({
       tipoDocumento: ['CC', Validators.required],
       documento: ['', [Validators.required, Validators.minLength(5)]]
+    });
+  }
+
+  ngOnInit(): void {
+    // Página estática — el resultado es dinámico (se carga tras submit del formulario),
+    // pero el shell de la página es siempre el mismo. Meta tags fijos son suficientes.
+    this.seo.setPage({
+      title: 'Validar Diploma',
+      description: 'Verifica la autenticidad de un diploma emitido por Aula Virtual. Ingresa el número de documento del certificado para validarlo.',
+      keywords: 'validar diploma, verificar certificado, autenticidad diploma'
     });
   }
 
@@ -40,7 +52,7 @@ export class ValidarComponent {
             this.isLoading = false;
             this.resultado = response;
           },
-          error: (error) => {
+          error: (_error) => {
             this.isLoading = false;
             this.resultado = {
               valido: false,

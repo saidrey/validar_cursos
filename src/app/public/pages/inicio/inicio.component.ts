@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { SeoService } from '../../../core/services/seo.service';
 
 @Component({
   selector: 'app-inicio',
@@ -10,7 +11,33 @@ import { FooterComponent } from '../../components/footer/footer.component';
   templateUrl: './inicio.component.html',
   styleUrl: './inicio.component.css'
 })
-export class InicioComponent {
+export class InicioComponent implements OnInit {
+  private seo = inject(SeoService);
+
+  ngOnInit(): void {
+    // Página raíz: meta genérico del sitio.
+    // El JSON-LD Organization le dice a Google qué entidad es este sitio,
+    // lo que mejora el Knowledge Panel y los resultados de búsqueda de marca.
+    this.seo.setPage({
+      title: 'Inicio',
+      description: 'Plataforma de formación certificada en gestión pública, derecho, liderazgo, finanzas y administración organizacional. Cursos con diploma verificable.',
+      keywords: 'cursos certificados, gestión pública, liderazgo, formación online, diplomas verificables',
+      type: 'website'
+    });
+
+    this.seo.setJsonLd({
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      'name': 'Aula Virtual',
+      'url': 'https://www.aulavirtualcentrodecompetencia.com',
+      'description': 'Plataforma de formación certificada en gestión pública, derecho, liderazgo y administración organizacional.',
+      'contactPoint': {
+        '@type': 'ContactPoint',
+        'contactType': 'customer service',
+        'availableLanguage': 'Spanish'
+      }
+    });
+  }
   categorias = [
     {
       icono: 'account_balance',
