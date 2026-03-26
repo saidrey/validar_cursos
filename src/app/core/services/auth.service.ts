@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -12,6 +13,12 @@ export class AuthService {
   private registroUrl = `${environment.apiUrl}/registro.php`;
   private usuarioActual = signal<Usuario | null>(null);
 
+  // PLATFORM_ID distingue si estamos en 'browser' o 'server' (Node).
+  // El servicio vive en el DI root, así que se instancia también durante SSR
+  // cuando algún componente público lo inyecta (ej: navbar). Sin este guard
+  // el constructor crashea en Node porque localStorage no existe.
+  private readonly platformId = inject(PLATFORM_ID);
+
   constructor(private http: HttpClient) {
     this.cargarUsuarioDesdeStorage();
   }
@@ -20,7 +27,7 @@ export class AuthService {
     return this.http.post<LoginResponse>(this.apiUrl, { email, password })
       .pipe(
         tap((response: LoginResponse) => {
-          if (response.token && response.usuario) {
+          if (response.token && response.usuario && isPlatformBrowser(this.platformId)) {
             // Limpiar ambos storages para evitar sesiones viejas mezcladas
             localStorage.removeItem('token');
             localStorage.removeItem('usuario');
@@ -42,6 +49,7 @@ export class AuthService {
 
   logout(): void {
     this.usuarioActual.set(null);
+    if (!isPlatformBrowser(this.platformId)) return;
     localStorage.removeItem('token');
     localStorage.removeItem('usuario');
     sessionStorage.removeItem('token');
@@ -49,6 +57,7 @@ export class AuthService {
   }
 
   estaAutenticado(): boolean {
+    if (!isPlatformBrowser(this.platformId)) return false;
     return this.usuarioActual() !== null &&
       !!(localStorage.getItem('token') || sessionStorage.getItem('token'));
   }
@@ -62,6 +71,8 @@ export class AuthService {
   }
 
   private cargarUsuarioDesdeStorage(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const ssToken = sessionStorage.getItem('token');
     const ssUsuario = sessionStorage.getItem('usuario');
     if (ssToken && ssUsuario) {

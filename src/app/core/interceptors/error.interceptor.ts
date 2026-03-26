@@ -1,15 +1,17 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
-  
+  const platformId = inject(PLATFORM_ID);
+
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       let errorMessage = '';
-      
+
       if (error.error instanceof ErrorEvent) {
         // Error del lado del cliente
         errorMessage = `Error: ${error.error.message}`;
@@ -21,11 +23,15 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
             break;
           case 401:
             errorMessage = 'No autorizado. Por favor inicia sesión nuevamente.';
-            localStorage.removeItem('usuario');
-            localStorage.removeItem('token');
-            sessionStorage.removeItem('usuario');
-            sessionStorage.removeItem('token');
-            router.navigate(['/login']);
+            // El 401 solo puede llegar en browser (las rutas SSR son públicas).
+            // Igual lo guardamos por si acaso, sin crashear en Node.
+            if (isPlatformBrowser(platformId)) {
+              localStorage.removeItem('usuario');
+              localStorage.removeItem('token');
+              sessionStorage.removeItem('usuario');
+              sessionStorage.removeItem('token');
+              router.navigate(['/login']);
+            }
             break;
           case 403:
             errorMessage = error.error?.mensaje || 'No tienes permisos para realizar esta acción.';
